@@ -322,9 +322,37 @@ function create(pool) {
     if (m) return m[1];
     return u.startsWith('/') ? u : null;
   };
+  /* ----- Medios: vídeo(s) y flyer(s) de un servicio -----
+   * Orden de búsqueda (se admiten DOS de cada, "particular" y "general"):
+   *  1) columnas del propio servicio (videoParticularUrl, videoUrl, flyerParticularUrl, flyerUrl)
+   *  2) tabla public.media_assets con serviceId = id del servicio
+   *  3) vídeo fijo del itinerario según el tipo de actividad (itinerario-N.mp4)
+   *  4) si nada coincide, el de yoga (itinerario-1.mp4) */
+  const ITINERARIO = [
+    [/puja/i, 4], [/ba[nñ]o|gong/i, 3], [/medita/i, 2], [/gestalt/i, 5], [/constelaci/i, 6],
+    [/encuentro/i, 7], [/ayuno/i, 8], [/especial|acto/i, 9], [/yoga|hatha|kundalini|nagna/i, 1],
+  ];
+  const itinerarioDe = (txt) => { for (const [re, n] of ITINERARIO) if (re.test(txt || '')) return n; return 1; };
+  const uniq = (a) => a.filter((x, i) => x && a.indexOf(x) === i);
+  function resolverMedios(r, activos) {
+    const delServicio = (activos || []).filter((a) => String(a.serviceId) === String(r.id));
+    const deTabla = (tipo) => delServicio.filter((a) => String(a.mediaType).toLowerCase() === tipo).map((a) => mediaUrl(a.publicUrl) || mediaUrl(a.physicalPath && '/' + tipo + 's/' + a.physicalPath.split('/').pop()));
+    let vids = uniq([mediaUrl(r.videoParticularUrl), mediaUrl(r.videoUrl), ...deTabla('video')]);
+    let flys = uniq([mediaUrl(r.flyerParticularUrl), mediaUrl(r.flyerUrl), ...deTabla('flyer')]);
+    if (!vids.length) vids = ['/videos/itinerario-' + itinerarioDe((r.name || '') + ' ' + (r.categoria || '')) + '.mp4'];
+    // máximo dos de cada
+    vids = vids.slice(0, 2); flys = flys.slice(0, 2);
+    return {
+      flyers: flys,
+      videos: vids.map((u) => {
+        const it = /\/videos\/(itinerario-\d+)\.mp4$/i.exec(u);
+        return { url: u, poster: it ? '/videos/' + it[1] + '-poster.jpg' : u.replace(/\.mp4$/i, '-poster.jpg') };
+      }),
+    };
+  }
   const hhmm = (s) => s.slice(11);
   /** Convierte una fila de public.services en un borrador de evento. Tolera columnas que falten. */
-  function servicioAEvento(r) {
+  function servicioAEvento(r, activos) {
     const flagCols = Object.keys(r).filter((k) => typeof r[k] === 'boolean' && /tbd|confirm|sinfecha|nodate|pendiente/i.test(k));
     const flag = flagCols.some((k) => r[k] === true);
     const ini = fmtMadrid(r.eventStartDate), fin = fmtMadrid(r.eventEndDate) || ini;
@@ -335,10 +363,9 @@ function create(pool) {
     const precio = r.price != null ? Number(r.price) : 0;
     if (precio > 0) detalles.push(`💶 <b>${String(precio).replace('.', ',').replace(/,00$/, '')} €</b>`);
     const botones = [{ tipo: 'link', texto: 'Reservar por WhatsApp', url: 'https://wa.me/34646034231?text=' + encodeURIComponent('Hola, quiero reservar: ' + r.name), estilo: 'p', cuando: 'vivo' }];
-    const fly = mediaUrl(r.flyerParticularUrl) || mediaUrl(r.flyerUrl);
-    if (fly) botones.push({ tipo: 'imagen', texto: 'Ver el cartel', url: fly, alt: 'Cartel ' + r.name, estilo: 'g', cuando: 'siempre' });
-    const vid = mediaUrl(r.videoParticularUrl);
-    if (vid) botones.push({ tipo: 'video', texto: '▶ Ver el vídeo', url: vid, estilo: 'g', cuando: 'siempre' });
+    const m = resolverMedios(r, activos);
+    m.flyers.forEach((f, i) => botones.push({ tipo: 'imagen', texto: m.flyers.length > 1 ? 'Ver el cartel ' + (i + 1) : 'Ver el cartel', url: f, alt: 'Cartel ' + r.name, estilo: 'g', cuando: 'siempre' }));
+    m.videos.forEach((v, i) => botones.push({ tipo: 'video', texto: m.videos.length > 1 ? '▶ Ver el vídeo ' + (i + 1) : '▶ Ver el vídeo', url: v.url, poster: v.poster || undefined, estilo: 'g', cuando: 'siempre' }));
     return {
       crmId: String(r.id),
       titulo: r.name, etiqueta: r.categoria || (r.serviceType === 'recurring' ? 'Clase' : 'Evento'),
@@ -357,7 +384,11 @@ function create(pool) {
     } catch (e) {
       rows = (await pool.query(`SELECT s.* FROM public.services s ORDER BY s.name`)).rows;
     }
-    return rows.filter((r) => r.isActive !== false).map(servicioAEvento);
+    let activos = [];
+    try { activos = (await pool.query(`SELECT * FROM public.media_assets WHERE "isActive" IS DISTINCT FROM false`)).rows; } catch (e) { /* sin tabla de medios: se usan los fijos */ }
+    return rows
+      .filter((r) => r.isActive !== false && !/formaci[oó]n/i.test(r.name || ''))
+      .map((r) => servicioAEvento(r, activos));
   }
   async function crmEsquema() {
     if (!dbActiva) throw new Error('No hay base de datos configurada');

@@ -119,6 +119,38 @@
           "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20ser%C3%A1%20la%20pr%C3%B3xima%20Constelaci%C3%B3n%20Familiar",
           "estilo": "g",
           "cuando": "pasado"
+        },
+        {
+          "tipo": "imagen",
+          "texto": "Ver el cartel 1",
+          "url": "/flyers/constelaciones_familiares_particular.jpg",
+          "alt": "Cartel Constelaciones Familiares",
+          "estilo": "g",
+          "cuando": "siempre"
+        },
+        {
+          "tipo": "imagen",
+          "texto": "Ver el cartel 2",
+          "url": "/flyers/constalaciones.jpeg",
+          "alt": "Cartel Constelaciones Familiares (general)",
+          "estilo": "g",
+          "cuando": "siempre"
+        },
+        {
+          "tipo": "video",
+          "texto": "▶ Ver el vídeo 1",
+          "url": "/videos/constelacionesparticular.mp4",
+          "poster": "/videos/constelacionesparticular-poster.jpg",
+          "estilo": "g",
+          "cuando": "siempre"
+        },
+        {
+          "tipo": "video",
+          "texto": "▶ Ver el vídeo 2",
+          "url": "/videos/itinerario-6.mp4",
+          "poster": "/videos/itinerario-6-poster.jpg",
+          "estilo": "g",
+          "cuando": "siempre"
         }
       ]
     },
@@ -153,43 +185,6 @@
           "tipo": "link",
           "texto": "Próximo baño de gong",
           "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20es%20el%20pr%C3%B3ximo%20Ba%C3%B1o%20de%20Gong",
-          "estilo": "g",
-          "cuando": "pasado"
-        }
-      ]
-    },
-    {
-      "orden": 4,
-      "inicio": "2026-11-22T09:00",
-      "fin": "2026-11-22T19:00",
-      "etiqueta": "Formación",
-      "titulo": "Formación en Constelaciones Familiares",
-      "descripcion": "Crecimiento personal y formación profesional. Un domingo al mes, con María Rosa López Villalba (bióloga, terapeuta Gestalt y PNL, 20 años como consteladora) y la coordinación de Salvadora Conesa. Sesión del primer año de formación; también se puede asistir como proceso de crecimiento personal.",
-      "detalles": [
-        "🕘 <b>9:00 – 19:00 h</b>",
-        "📍 <b>Club Social Parque Granada</b> · C/ Holanda, 1 · Fuenlabrada",
-        "👥 Grupos reducidos"
-      ],
-      "botones": [
-        {
-          "tipo": "link",
-          "texto": "Información e inscripciones",
-          "url": "https://wa.me/34695172625?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20Formaci%C3%B3n%20en%20Constelaciones%20Familiares",
-          "estilo": "p",
-          "cuando": "vivo"
-        },
-        {
-          "tipo": "imagen",
-          "texto": "Ver el cartel",
-          "url": "/flyers/constalaciones.jpeg",
-          "alt": "Cartel del curso de formación en Constelaciones Familiares",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "link",
-          "texto": "Próxima sesión",
-          "url": "https://wa.me/34695172625",
           "estilo": "g",
           "cuando": "pasado"
         }
