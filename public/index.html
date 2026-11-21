@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Actividades del mes de noviembre 2026 · Centro de Yoga Salvadora Conesa</title>
-<meta name="description" content="Bienestar Experience, constelaciones familiares, baño de gong, yoga terapéutico y la entrevista a Salvadora Conesa en Madridmarket.es. Centro de Yoga en Fuenlabrada.">
+<title>Actividades del mes · Centro de Yoga Salvadora Conesa</title>
+<meta name="description" content="Actividades del mes en el Centro de Yoga Salvadora Conesa (Fuenlabrada): encuentros, constelaciones familiares, baños de gong, yoga terapéutico y entrevistas. Con histórico de meses anteriores.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600&display=swap">
 <script src="/config.js"></script>
@@ -15,6 +15,7 @@
   --card:rgba(255,255,255,.055); --line:rgba(255,255,255,.13);
   --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif; --sans:"Outfit","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
 }
+[hidden]{display:none!important}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:74px}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 var(--sans)}
@@ -193,6 +194,31 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 .lb__box img{max-height:88vh;width:auto;margin:0 auto;object-fit:contain}
 .lb__box video{width:100%;max-height:88vh;background:#000}
 .lb__x{position:absolute;top:10px;right:10px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:1.4rem;cursor:pointer}
+
+/* ---------- selector de mes + histórico ---------- */
+.monthbar{background:rgba(255,255,255,.04);border-bottom:1px solid var(--line)}
+.monthbar .wrap{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
+.monthbar button,.monthbar select,.monthbar a{font:inherit;font-size:.9rem;color:var(--ink);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;text-decoration:none}
+.monthbar button:hover:not(:disabled),.monthbar a:hover,.monthbar select:hover{border-color:var(--gold)}
+.monthbar button:disabled{opacity:.35;cursor:default}
+.monthbar select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;min-width:190px}
+.monthbar select option{background:#26101b;color:var(--ink)}
+.monthbar .grow{flex:1}
+.monthbar .mh{color:var(--gold);border-color:rgba(197,160,89,.45)}
+.aviso-arch{background:rgba(197,160,89,.1);border-bottom:1px solid rgba(197,160,89,.3);color:var(--ink);font-size:.92rem}
+.aviso-arch .wrap{padding:10px 0}
+.aviso-arch a{color:var(--gold);font-weight:600}
+#estado{padding:120px 0;text-align:center;color:var(--soft)}
+.hist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.hist h3.yr{grid-column:1/-1;font-family:var(--serif);font-size:1.5rem;margin:18px 0 0;color:var(--gold)}
+.hist a.hm{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;transition:transform .25s,border-color .25s,background .25s}
+.hist a.hm:hover{transform:translateY(-3px);border-color:var(--gold);background:rgba(255,255,255,.08)}
+.hist a.hm.cur{border-color:var(--gold);background:rgba(197,160,89,.1)}
+.hist a.hm b{display:block;font-family:var(--serif);font-size:1.45rem;text-transform:capitalize;line-height:1.1}
+.hist a.hm span{display:block;color:var(--soft);font-size:.85rem;margin-top:6px}
+.hist a.hm i{font-style:normal;display:inline-block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--gold);border-radius:999px;padding:2px 10px;margin-top:8px}
+.vacio{color:var(--soft);font-style:italic}
+
 </style>
 </head>
 <body>
@@ -203,34 +229,42 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
       <img id="logo" src="https://salvadoraconesa.es/imagenes/logo/logo.png" alt="Logotipo Centro de Yoga Salvadora Conesa">
       <span>Centro de Yoga<br>Salvadora Conesa</span>
     </a>
-    <nav class="nav">
+    <nav class="nav" id="nav">
       <a href="#calendario">Calendario</a>
-      <a href="#rutina">Clases</a>
-      <a href="#entrevista">Entrevista</a>
+      <a href="#rutina" data-nav="rutina">Clases</a>
+      <a href="#entrevista" data-nav="entrevista">Entrevista</a>
+      <a href="#historico">Histórico</a>
       <a href="#reservas">Reservas</a>
       <a class="back" href="https://salvadoraconesa.es/" data-landing>← Volver a la web</a>
     </nav>
   </div>
 </header>
 
-<main>
+<div class="monthbar" id="monthbar" hidden>
+  <div class="wrap">
+    <button type="button" id="mPrev" aria-label="Mes anterior">‹ Anterior</button>
+    <select id="mSel" aria-label="Elegir mes"></select>
+    <button type="button" id="mNext" aria-label="Mes siguiente">Siguiente ›</button>
+    <span class="grow"></span>
+    <a class="mh" href="#historico">Ver todo el histórico</a>
+  </div>
+</div>
+<div class="aviso-arch" id="avisoArch" hidden><div class="wrap"></div></div>
+
+<div id="estado" class="wrap">Cargando las actividades…</div>
+
+<main id="main" hidden>
   <!-- PORTADA -->
   <section class="hero" style="padding:0">
     <div class="hero__bg" id="heroBg"></div>
     <div class="wrap">
       <p class="kicker">Centro de Yoga · Fuenlabrada</p>
-      <h1>Actividades de <em>noviembre</em> 2026</h1>
-      <p class="lead">Un mes para parar, respirar y sentir: Bienestar Experience, constelaciones familiares, baño de gong, yoga terapéutico y una conversación con Salvadora Conesa sobre cómo empezar a meditar.</p>
-      <ul class="chips">
-        <li><b>13</b> Bienestar Experience</li>
-        <li><b>14</b> Constelaciones familiares</li>
-        <li><b>21</b> Baño de gong</li>
-        <li><b>22</b> Formación en constelaciones</li>
-        <li><b>Todo el mes</b> Yoga y meditación</li>
-      </ul>
+      <h1 id="hTitle"></h1>
+      <p class="lead" id="hLead"></p>
+      <ul class="chips" id="hChips"></ul>
       <div class="btns">
         <a class="btn btn--p" href="#calendario">Ver el calendario</a>
-        <a class="btn btn--g" href="#entrevista">Ver la entrevista</a>
+        <a class="btn btn--g" href="#entrevista" id="hBtnEnt">Ver la entrevista</a>
       </div>
     </div>
   </section>
@@ -238,229 +272,41 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
   <!-- CALENDARIO + EVENTOS -->
   <section id="calendario" style="padding-top:44px">
     <div class="wrap">
-      <p class="kicker">Noviembre de un vistazo</p>
-      <h2>Lo que ha pasado y lo que viene</h2>
+      <p class="kicker" id="cKicker"></p>
+      <h2 id="cH2"></h2>
       <hr class="rule">
-      <p class="sec-sub">Guardamos aquí todo el mes, también lo ya celebrado, para que puedas ver cómo fue y no perderte lo próximo.</p>
-
+      <p class="sec-sub" id="cSub"></p>
       <div class="month">
-        <aside class="cal rv" aria-label="Calendario de noviembre de 2026">
-          <h3>Noviembre 2026</h3>
+        <aside class="cal rv" id="calBox">
+          <h3 id="calH3"></h3>
           <small id="calToday"></small>
           <div class="cal__grid" id="calGrid"></div>
-          <div class="legend">
-            <span><i style="background:rgba(197,160,89,.5)"></i>Evento</span>
-            <span><i style="background:rgba(255,255,255,.25)"></i>Ya celebrado</span>
-            <span><i style="background:var(--gold)"></i>Clases (mar · mié · jue)</span>
-          </div>
+          <div class="legend" id="calLegend"></div>
         </aside>
-
-        <div class="events">
-
-          <!-- 13 nov -->
-          <article class="ev is-past rv" id="ev-13" data-start="2026-11-13T16:30" data-end="2026-11-13T21:30">
-            <div class="ev__date"><span class="dow">Viernes</span><span class="day">13</span><span class="mon">Noviembre</span></div>
-            <div class="ev__body">
-              <div class="ev__top"><span class="tag">Encuentro</span><span class="state">Celebrado</span></div>
-              <h3>Bienestar Experience</h3>
-              <p><b>Más allá del tumor · Una visión integrativa del cáncer.</b> Biohacking y medicina del estilo de vida con Txiki Soto (salud integrativa), Giulliana Gabaldoni (Diseña tu vida) y María Salvadora Conesa, que cerró el encuentro con terapia de sonido: un baño de tres gongs para armonizar la vibración de todos los asistentes.</p>
-              <ul class="meta">
-                <li>🕟 <b>16:30 – 21:30 h</b></li>
-                <li>📍 <b>Impact Hub Gobernador</b> · C/ del Gobernador, 26 · Madrid</li>
-                <li>🚇 Metro Antón Martín (L1) · Sala accesible</li>
-                <li>🎟 Entrada general <b>19,99 €</b> (Eventbrite)</li>
-              </ul>
-              <div class="btns">
-                <a class="btn btn--g btn--s cta-live" href="https://txikisoto.com/bienestarexperience" target="_blank" rel="noopener">Entradas e información</a>
-                <button class="btn btn--p btn--s cta-past" data-video="/videos/Promo_Bienestar-Experience-2026_1920x1080.mp4" data-poster="/videos/Promo_Bienestar-Experience-2026_1920x1080-poster.jpg" type="button">▶ Ver el vídeo promo</button>
-                <button class="btn btn--g btn--s" data-img="/flyers/flyer13nov2026vivemasparticular.jpeg" data-alt="Cartel Bienestar Experience 2026 · Más allá del tumor" type="button">Ver el cartel</button>
-                <button class="btn btn--g btn--s cta-past" data-t="859" type="button">Escucha a Salvadora en la entrevista</button>
-              </div>
-              <p class="note-past">Evento de bienestar: no sustituye ningún tratamiento médico.</p>
-            </div>
-          </article>
-
-          <!-- 14 nov -->
-          <article class="ev is-past rv" id="ev-14" data-start="2026-11-14T00:00" data-end="2026-11-14T23:59">
-            <div class="ev__date"><span class="dow">Sábado</span><span class="day">14</span><span class="mon">Noviembre</span></div>
-            <div class="ev__body">
-              <div class="ev__top"><span class="tag">Terapia de grupo</span><span class="state">Celebrado</span></div>
-              <h3>Constelaciones familiares</h3>
-              <p>Terapia grupal para ordenar y esclarecer dinámicas familiares inconscientes, dirigida por Salvadora Conesa, terapeuta Gestalt y facilitadora de constelaciones.</p>
-              <ul class="meta">
-                <li>🕘 <span class="ph">[horario por añadir]</span></li>
-                <li>📍 <span class="ph">[lugar por añadir]</span></li>
-              </ul>
-              <div class="btns">
-                <a class="btn btn--g btn--s cta-live" href="https://wa.me/34646034231?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20Constelaciones%20Familiares" target="_blank" rel="noopener">Pedir información</a>
-                <a class="btn btn--g btn--s cta-past" href="https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20ser%C3%A1%20la%20pr%C3%B3xima%20Constelaci%C3%B3n%20Familiar" target="_blank" rel="noopener">Avísame de la próxima</a>
-              </div>
-            </div>
-          </article>
-
-          <!-- 21 nov -->
-          <article class="ev rv" id="ev-21" data-start="2026-11-21T18:00" data-end="2026-11-21T20:00">
-            <div class="ev__date"><span class="dow">Sábado</span><span class="day">21</span><span class="mon">Noviembre</span></div>
-            <div class="ev__body">
-              <div class="ev__top"><span class="tag">Sonoterapia</span><span class="state">Próximamente</span></div>
-              <h3>Baño de gong y meditación sonora</h3>
-              <p>Terapia vibracional de armonización celular y disolución de tensiones a través de gongs sinfónicos.</p>
-              <ul class="meta">
-                <li>🕕 <b>18:00 – 20:00 h</b> (2 horas)</li>
-                <li>💶 <b>16 €</b></li>
-                <li>📍 Calle Holanda, 1 · Fuenlabrada</li>
-              </ul>
-              <div class="btns">
-                <a class="btn btn--p btn--s cta-live" href="https://wa.me/34646034231?text=Hola%2C%20quiero%20reservar%20el%20Ba%C3%B1o%20de%20Gong%20del%2021%20de%20noviembre" target="_blank" rel="noopener">Reservar por WhatsApp</a>
-                <button class="btn btn--g btn--s" data-t="1027" type="button">¿Qué se siente en un baño de gong?</button>
-                <a class="btn btn--g btn--s cta-past" href="https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20es%20el%20pr%C3%B3ximo%20Ba%C3%B1o%20de%20Gong" target="_blank" rel="noopener">Próximo baño de gong</a>
-              </div>
-            </div>
-          </article>
-
-
-          <!-- 22 nov -->
-          <article class="ev rv" id="ev-22" data-start="2026-11-22T09:00" data-end="2026-11-22T19:00">
-            <div class="ev__date"><span class="dow">Domingo</span><span class="day">22</span><span class="mon">Noviembre</span></div>
-            <div class="ev__body">
-              <div class="ev__top"><span class="tag">Formación</span><span class="state">Próximamente</span></div>
-              <h3>Formación en Constelaciones Familiares</h3>
-              <p>Crecimiento personal y formación profesional. Un domingo al mes, con María Rosa López Villalba (bióloga, terapeuta Gestalt y PNL, 20 años como consteladora) y la coordinación de María Salvadora Conesa. Sesión del primer año de formación; también se puede asistir como proceso de crecimiento personal.</p>
-              <ul class="meta">
-                <li>🕘 <b>9:00 – 19:00 h</b></li>
-                <li>📍 <b>Club Social Parque Granada</b> · C/ Holanda, 1 · Fuenlabrada</li>
-                <li>👥 Grupos reducidos</li>
-              </ul>
-              <div class="btns">
-                <a class="btn btn--p btn--s cta-live" href="https://wa.me/34695172625?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20Formaci%C3%B3n%20en%20Constelaciones%20Familiares" target="_blank" rel="noopener">Información e inscripciones</a>
-                <button class="btn btn--g btn--s" data-img="/flyers/constalaciones.jpeg" data-alt="Cartel del curso de formación en Constelaciones Familiares" type="button">Ver el cartel</button>
-                <a class="btn btn--g btn--s cta-past" href="https://wa.me/34695172625" target="_blank" rel="noopener">Próxima sesión</a>
-              </div>
-            </div>
-          </article>
-        </div>
+        <div class="events" id="events"></div>
       </div>
     </div>
   </section>
 
   <!-- RUTINA -->
-  <section id="rutina" class="band">
-    <div class="wrap">
-      <p class="kicker">Todo el mes</p>
-      <h2>Tu rutina de bienestar</h2>
-      <hr class="rule">
-      <p class="sec-sub">Las clases de siempre en el centro continúan durante todo noviembre. La primera clase es gratuita.</p>
-      <div class="grid">
-        <article class="card rv">
-          <h3>Hatha Yoga Terapéutico</h3>
-          <p class="sub">Cuidado de la espalda y las articulaciones</p>
-          <ul class="sched">
-            <li><span>Martes</span><span>9:45 · 11:15 · 17:00 · 18:30 · 20:00</span></li>
-            <li><span>Miércoles</span><span>20:15</span></li>
-            <li><span>Jueves</span><span>9:45 · 11:15 · 16:00 · 17:30 · 19:00</span></li>
-          </ul>
-          <p style="margin-top:14px">Matrícula mensual: 25 € (1 clase/semana) · 42 € (2 clases/semana) · clase suelta 10 €.</p>
-        </article>
-        <article class="card rv">
-          <h3>Meditaciones guiadas</h3>
-          <p class="sub">Martes y jueves · 9:15 – 9:45</p>
-          <p>Treinta minutos para empezar el día con calma. Máximo 28 personas.</p>
-          <p>Gratis para alumnos de yoga. Para el resto: 3 € por sesión o 15 € al mes.</p>
-        </article>
-        <article class="card rv">
-          <h3>Gong en tu clase</h3>
-          <p class="sub">Última semana de cada mes</p>
-          <p>Como regalo a sus alumnos, Salvadora cierra la relajación de la última semana del mes con uno, dos o tres gongs.</p>
-          <p>Y una vez al mes, sesión de dos horas con gongs, cuencos tibetanos y cuencos de cuarzo.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  <section id="rutina" class="band" hidden><div class="wrap" id="rutinaBox"></div></section>
 
   <!-- ENTREVISTA -->
-  <section id="entrevista">
+  <section id="entrevista" hidden><div class="wrap" id="entBox"></div></section>
+
+  <!-- HISTÓRICO -->
+  <section id="historico" class="band">
     <div class="wrap">
-      <p class="kicker">Entrevista · Madridmarket.es</p>
-      <h2>Conversación con Salvadora Conesa</h2>
+      <p class="kicker">Archivo</p>
+      <h2>Histórico de actividades</h2>
       <hr class="rule">
-      <p class="sec-sub">Ayuno, yoga terapéutico, gong y el arte de aprender a meditar. Pulsa cualquier capítulo y el vídeo salta a ese momento.</p>
-
-      <div class="who rv">
-        <div><small>Entrevistador</small><b>Santiago Ángel García</b><span>Madridmarket.es</span></div>
-        <div><small>Invitada</small><b>María Salvadora Conesa</b><span>Yoga, ayuno y gong · Escuela de Yoga de Fuenlabrada</span></div>
-        <div><small>Duración</small><b>18 min</b><span>Versión resumida: 4 min</span></div>
-      </div>
-
-      <div class="player" id="player">
-        <div class="pl-left">
-          <div class="tabs" role="group" aria-label="Versión del vídeo">
-            <button type="button" id="tabFull" aria-pressed="true">Entrevista completa</button>
-            <button type="button" id="tabShort" aria-pressed="false">Resumen 4 min</button>
-          </div>
-          <div class="video">
-            <video id="mm-video" controls preload="metadata" playsinline poster="/videos/entrevista_madridmarket_poster.jpg">
-              <source src="/videos/entrevista_madridmarket_completa.mp4" type="video/mp4">
-              Tu navegador no puede reproducir este vídeo.
-            </video>
-          </div>
-          <div class="now" aria-live="polite">
-            <small>Ahora en el vídeo</small>
-            <h4 id="nowT">Presentación de María Conesa</h4>
-            <p id="nowD">Pulsa play o elige un capítulo.</p>
-          </div>
-        </div>
-
-        <ol class="chap" id="chap">
-          <li><button type="button" data-t="1"><span class="row"><time>0:01</time><b>Presentación de María Conesa</b></span><span class="d">Santiago Ángel García recibe a una invitada que lleva cuarenta años dedicada al yoga: profesora, directora de su escuela, terapeuta Gestalt y coordinadora de grupos de ayuno.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="36"><span class="row"><time>0:36</time><b>El ayuno y los encuentros de bienestar</b></span><span class="d">Por qué descansar el aparato digestivo sienta tan bien, ayunos de cuatro días con líquidos y encuentros con amaneceres y paseos descalzos.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="119"><span class="row"><time>1:59</time><b>Yoga terapéutico y la vibración del gong</b></span><span class="d">Hatha yoga con enfoque terapéutico para la columna y las articulaciones, y el gong como maestro: nunca suena igual.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="208"><span class="row"><time>3:28</time><b>¿Cómo se entra antes en meditación?</b></span><span class="d">Sentarse con la espalda erguida y respirar hondo. Por qué tumbado no es meditar y cómo el gong acompaña a la mente.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="333"><span class="row"><time>5:33</time><b>¿Solo o acompañado?</b></span><span class="d">Meditar en grupo es como ir en pelotón. Una guía breve y después silencio: si alguien habla todo el rato, es visualización.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="435"><span class="row"><time>7:15</time><b>Qué se siente al meditar: la mente en «síntesis»</b></span><span class="d">Dejar la mente en blanco es dejarla en síntesis: sentir la respiración y el espacio entre un pensamiento y el siguiente.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="597"><span class="row"><time>9:57</time><b>Visualización, meditación, el Dalai Lama y las ondas cerebrales</b></span><span class="d">La diferencia entre llevar la mente en una dirección y simplemente parar. Lo que miden los encefalogramas en meditación profunda.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="689"><span class="row"><time>11:29</time><b>Cuarenta años de práctica y el «estado de gracia»</b></span><span class="d">Practica desde 1986. La paz siempre llega; el momento especial no, y ahí es donde el gong ayuda.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="737"><span class="row"><time>12:17</time><b>La meditación y la vida en pareja</b></span><span class="d">Meditar no rompe una pareja: te hace ver cosas que antes no veías, y eso nunca es un riesgo de la meditación.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="824"><span class="row"><time>13:44</time><b>Los once minutos que cambian el día</b></span><span class="d">Un día sí y otro no, de 10 a 15 minutos; lo ideal, once. Y la máxima de su maestro: si no tienes tiempo para once, medita veintidós.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="859"><span class="row"><time>14:19</time><b>Tocar el gong como meditación</b></span><span class="d">De pie y en movimiento, con dos o tres gongs a la vez. En el Bienestar Experience cerró el encuentro con tres gongs.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="947"><span class="row"><time>15:47</time><b>Sesiones de gong, cuencos tibetanos y de cuarzo</b></span><span class="d">Cada metal vibra distinto. Relajación con gong al final de cada mes y una sesión mensual de dos horas.</span><i class="fill"></i></button></li>
-          <li><button type="button" data-t="1027"><span class="row"><time>17:07</time><b>Una historia: el olfato que volvió</b></span><span class="d">Un hombre que llevaba tres años sin olfato ni gusto tras el Covid salió de un baño de gong y esa noche, cenando, volvió a notar los sabores.</span><i class="fill"></i></button></li>
-        </ol>
-      </div>
-
-      <div class="cards4">
-        <div class="card rv"><span class="ic">🌅</span><h4>Ayuno y descanso digestivo</h4><p>Cuantas más horas descansa el aparato digestivo, mejor. Propone un par de ayunos de cuatro días al año, solo con líquidos.</p></div>
-        <div class="card rv"><span class="ic">🧘</span><h4>Yoga terapéutico</h4><p>Una práctica pensada para cuidar la columna y las articulaciones, con asanas, respiración y meditación.</p></div>
-        <div class="card rv"><span class="ic">🔔</span><h4>El gong, un maestro</h4><p>Terapia de vibración que nunca suena igual: cambia con el día, la temperatura y las personas de la sala.</p></div>
-        <div class="card rv"><span class="ic">🌿</span><h4>Meditar es entrenar</h4><p>No se trata de dejar la mente en blanco, sino de parar, sentir la respiración y dar espacio entre pensamientos.</p></div>
-      </div>
-
-      <blockquote class="quote rv">«Te ocupas de las cosas, pero no te preocupas.»<small>María Salvadora Conesa, sobre lo que deja la meditación</small></blockquote>
-
-      <div class="two">
-        <div class="rv">
-          <h3 class="sm">Cómo empezar a meditar</h3>
-          <ol class="steps">
-            <li><b>Siéntate con la espalda erguida.</b> Una silla con respaldo es perfecta.</li>
-            <li><b>Respira hondo y para.</b> Relaja el sistema nervioso y atiende a la respiración.</li>
-            <li><b>Ponle un cronómetro.</b> Empieza con unos siete minutos, un día sí y otro no.</li>
-            <li><b>Acompañado es más fácil.</b> En grupo es como ir en pelotón.</li>
-            <li><b>Crece poco a poco.</b> Lo ideal, unos once minutos. Y si no tienes tiempo, medita veintidós.</li>
-          </ol>
-        </div>
-        <div class="rv">
-          <h3 class="sm">Una historia que no deja indiferente</h3>
-          <div class="story">
-            <h4>Tres años sin olfato ni gusto</h4>
-            <p>Un hombre que había perdido el olfato y el gusto tras el Covid asistió a un baño de gong con su mujer. Esa misma noche, cenando, volvió a distinguir los sabores. Para Salvadora, la vibración del gong se dirige a las zonas bloqueadas del cuerpo y ayuda a liberarlas.</p>
-            <button class="btn btn--g btn--s" data-t="1027" type="button">▶ Verlo en la entrevista</button>
-          </div>
-        </div>
-      </div>
+      <p class="sec-sub">Todos los meses del centro: lo que ya se celebró, con sus carteles, vídeos y entrevistas, y lo que viene.</p>
+      <div class="hist" id="histBox"></div>
     </div>
   </section>
 
   <!-- CONTACTO -->
-  <section class="contact band" id="reservas">
+  <section class="contact" id="reservas">
     <div class="wrap">
       <p class="kicker">Reservas</p>
       <h2>Reserva tu plaza</h2>
@@ -472,146 +318,305 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
         <a class="btn btn--g" href="mailto:salvadoraconesa@gmail.com">salvadoraconesa@gmail.com</a>
       </div>
       <address>Calle Holanda, 1 · Club Social Parque Granada · Fuenlabrada (Madrid)<br>Metro Parque Europa (Línea 12, MetroSur)</address>
-      <p class="note">Las experiencias y opiniones recogidas en la entrevista son personales y no sustituyen el consejo de un profesional sanitario.</p>
+      <p class="note" id="aviso"></p>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap">© 2026 Centro de Yoga Salvadora Conesa · <a href="https://salvadoraconesa.es/" data-landing>salvadoraconesa.es</a></div>
+  <div class="wrap">© <span id="yr"></span> Centro de Yoga Salvadora Conesa · <a href="https://salvadoraconesa.es/" data-landing>salvadoraconesa.es</a></div>
 </footer>
-
 
 <dialog class="lb" id="lb" aria-label="Ampliar"><div class="lb__box"><button class="lb__x" id="lbx" type="button" aria-label="Cerrar">×</button><div id="lbc"></div></div></dialog>
 
 <script>
 (function(){
+  var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  var DIAS_C=['dom','lun','mar','mié','jue','vie','sáb'];
   var NOW=new Date();
-
+  var BASE=/^\/servicios(\/|$)/.test(location.pathname)?'/servicios':'';
+  var $=function(id){return document.getElementById(id)};
+  var pad=function(n){return (n<10?'0':'')+n};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function when(str){var m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(str);return new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5])}
+  function fmtT(sec){sec=Math.round(sec);return Math.floor(sec/60)+':'+pad(sec%60)}
+  function urlMes(a,m){return BASE+'/'+a+'-'+pad(m)}
+  function key(a,m){return a*12+(m-1)}
 
   /* ---------- web principal y logotipo ---------- */
   var LAND=(window.SALVADORA_LANDING||'https://salvadoraconesa.es').replace(/\/$/,'');
   document.querySelectorAll('[data-landing]').forEach(function(a){a.href=LAND+'/'});
-  var lg=document.getElementById('logo');if(lg){lg.src=LAND+'/imagenes/logo/logo.png';lg.onerror=function(){this.style.display='none'}}
+  var lg=$('logo');if(lg){lg.src=LAND+'/imagenes/logo/logo.png';lg.onerror=function(){this.style.display='none'}}
+  $('yr').textContent=NOW.getFullYear();
 
   /* ---------- ventana ampliada: cartel o vídeo ---------- */
-  var lb=document.getElementById('lb'),lbc=document.getElementById('lbc');
+  var lb=$('lb'),lbc=$('lbc');
   function closeLb(){lbc.innerHTML='';if(lb.open)lb.close()}
-  document.getElementById('lbx').addEventListener('click',closeLb);
+  $('lbx').addEventListener('click',closeLb);
   lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
   lb.addEventListener('close',function(){lbc.innerHTML=''});
   document.addEventListener('click',function(e){
     var b=e.target.closest('[data-img],[data-video]');if(!b)return;
-    if(b.dataset.img){lbc.innerHTML='<img src="'+b.dataset.img+'" alt="'+(b.dataset.alt||'')+'">'}
-    else{lbc.innerHTML='<video src="'+b.dataset.video+'" poster="'+(b.dataset.poster||'')+'" controls autoplay playsinline></video>'}
+    if(b.dataset.img){lbc.innerHTML='<img src="'+esc(b.dataset.img)+'" alt="'+esc(b.dataset.alt||'')+'">'}
+    else{lbc.innerHTML='<video src="'+esc(b.dataset.video)+'" poster="'+esc(b.dataset.poster||'')+'" controls autoplay playsinline></video>'}
     lb.showModal();
   });
-
-  /* ---------- estado de los eventos (pasado / hoy / próximo) ---------- */
-  var evs=document.querySelectorAll('.ev[data-end]');
-  var evInfo={};
-  evs.forEach(function(el){
-    var s=new Date(el.dataset.start),e=new Date(el.dataset.end);
-    var st=el.querySelector('.state'),past=NOW>e;
-    var sameDay=NOW.toDateString()===s.toDateString();
-    el.classList.toggle('is-past',past);
-    if(past){st.textContent='Celebrado'}
-    else if(NOW>=s){st.textContent='En curso ahora'}
-    else if(sameDay){st.textContent='Hoy'}
-    else{st.textContent='Próximamente'}
-    evInfo[s.getDate()]={id:el.id,past:past,start:s};
-  });
-
-  /* ---------- calendario ---------- */
-  var g=document.getElementById('calGrid'),Y=2026,M=10;
-  ['L','M','X','J','V','S','D'].forEach(function(d){var c=document.createElement('div');c.className='cal__dow';c.textContent=d;g.appendChild(c)});
-  var first=(new Date(Y,M,1).getDay()+6)%7, days=new Date(Y,M+1,0).getDate(), next=null;
-  Object.keys(evInfo).sort(function(a,b){return a-b}).forEach(function(k){if(!evInfo[k].past&&next===null)next=+k});
-  for(var i=0;i<first;i++)g.appendChild(document.createElement('div'));
-  for(var d=1;d<=days;d++){
-    var dt=new Date(Y,M,d), b=document.createElement('button');
-    b.type='button';b.className='cal__d';b.textContent=d;
-    var dow=dt.getDay(); if(dow>=2&&dow<=4)b.classList.add('cls');
-    var endDay=new Date(Y,M,d,23,59);
-    if(NOW>endDay)b.classList.add('past');
-    if(NOW.getFullYear()===Y&&NOW.getMonth()===M&&NOW.getDate()===d)b.classList.add('today');
-    if(evInfo[d]){
-      b.classList.add('has');if(evInfo[d].past)b.classList.add('past');else if(d===next)b.classList.add('next');
-      (function(id){b.addEventListener('click',function(){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'center'})})})(evInfo[d].id);
-      b.setAttribute('aria-label','Ver evento del '+d+' de noviembre');
-    }else{b.disabled=true;b.style.cursor='default'}
-    g.appendChild(b);
-  }
-  var t=document.getElementById('calToday');
-  if(NOW.getFullYear()===Y&&NOW.getMonth()===M)t.textContent='Hoy es '+NOW.getDate()+' de noviembre';
-
-  /* ---------- vídeo y capítulos ---------- */
-  var v=document.getElementById('mm-video'),
-      chap=document.getElementById('chap'),
-      btns=[].slice.call(chap.querySelectorAll('button')),
-      lis=btns.map(function(b){return b.parentNode}),
-      times=btns.map(function(b){return +b.dataset.t}),
-      nowT=document.getElementById('nowT'),nowD=document.getElementById('nowD'),
-      tabFull=document.getElementById('tabFull'),tabShort=document.getElementById('tabShort'),
-      mode='full', FULL='/videos/entrevista_madridmarket_completa.mp4', SHORT='/videos/entrevista_madridmarket_resumen.mp4';
-
-  function setMode(m,cb){
-    if(m===mode){cb&&cb();return}
-    mode=m;
-    tabFull.setAttribute('aria-pressed',m==='full');tabShort.setAttribute('aria-pressed',m==='short');
-    chap.classList.toggle('off',m==='short');
-    v.pause();v.src=(m==='full')?FULL:SHORT;v.load();
-    if(cb)v.addEventListener('loadedmetadata',function f(){v.removeEventListener('loadedmetadata',f);cb()});
-    if(m==='short'){nowT.textContent='Resumen de 4 minutos';nowD.textContent='Lo mejor de la conversación. Cambia a «Entrevista completa» para usar los capítulos.'}
-    else update();
-  }
-  function seek(sec){
-    setMode('full',function(){
-      v.currentTime=sec;var p=v.play();if(p&&p.catch)p.catch(function(){});
-      document.getElementById('player').scrollIntoView({behavior:'smooth',block:'start'});
-    });
-  }
-  tabFull.addEventListener('click',function(){setMode('full')});
-  tabShort.addEventListener('click',function(){setMode('short')});
-  document.addEventListener('click',function(e){
-    var b=e.target.closest('[data-t]');if(!b)return;
-    seek(+b.dataset.t);
-  });
-
-  var cur=-1;
-  function update(){
-    if(mode!=='full')return;
-    var c=v.currentTime,idx=0,i;
-    for(i=0;i<times.length;i++){if(c>=times[i])idx=i}
-    for(i=0;i<lis.length;i++){
-      lis[i].classList.toggle('done',i<idx);
-      var f=lis[i].querySelector('.fill');
-      if(i===idx){
-        var end=(i+1<times.length)?times[i+1]:(v.duration||times[i]+70);
-        f.style.width=Math.max(0,Math.min(100,(c-times[i])/(end-times[i])*100))+'%';
-      }else f.style.width='';
-    }
-    if(idx!==cur){
-      cur=idx;
-      lis.forEach(function(l,k){l.classList.toggle('on',k===idx)});
-      nowT.textContent=btns[idx].querySelector('b').textContent;
-      nowD.textContent=btns[idx].querySelector('.d').textContent;
-      /* desplaza solo la lista, no la página */
-      var l=lis[idx];chap.scrollTo({top:l.offsetTop-chap.offsetTop-8,behavior:'smooth'});
-    }
-  }
-  v.addEventListener('timeupdate',update);
-  v.addEventListener('seeked',update);
-  update();
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(b&&P)P.seek(+b.dataset.t)});
 
   /* ---------- aparición al hacer scroll + parallax suave ---------- */
-  var rv=document.querySelectorAll('.rv');
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}})},{threshold:.12});
-    rv.forEach(function(el,i){el.style.transitionDelay=(i%3)*90+'ms';io.observe(el)});
-  }else rv.forEach(function(el){el.classList.add('in')});
-  var bg=document.getElementById('heroBg');
+  var io=null;
+  if('IntersectionObserver' in window)io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}})},{threshold:.12});
+  function reveal(root){
+    var els=(root||document).querySelectorAll('.rv:not(.in)');
+    els.forEach(function(el,i){if(io){el.style.transitionDelay=(i%3)*90+'ms';io.observe(el)}else el.classList.add('in')});
+  }
+  var bg=$('heroBg');
   window.addEventListener('scroll',function(){var y=window.scrollY;if(y<900)bg.style.transform='translateY('+(y*.25)+'px)'},{passive:true});
+
+  /* ---------- datos ---------- */
+  var LISTA=[],ACTUAL=null,CACHE={},P=null,CURKEY=null;
+  function getJSON(u){return fetch(u,{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+  function slugPath(){var m=/(\d{4})-(\d{2})\/?$/.exec(location.pathname);return m?{anio:+m[1],mes:+m[2]}:null}
+
+  function init(){
+    getJSON('/api/meses').then(function(d){
+      LISTA=d.meses||[];ACTUAL=d.actual||null;
+      if(!LISTA.length){$('estado').textContent='Todavía no hay actividades publicadas. ¡Vuelve pronto!';return}
+      renderSelector();renderHistorico();
+      var s=slugPath()||ACTUAL||{anio:LISTA[0].anio,mes:LISTA[0].mes};
+      return abrir(s.anio,s.mes,false);
+    }).catch(function(){$('estado').textContent='No se han podido cargar las actividades. Inténtalo de nuevo en unos minutos.'});
+  }
+
+  function abrir(a,m,push){
+    var k=a+'-'+pad(m);
+    var p=CACHE[k]?Promise.resolve(CACHE[k]):getJSON('/api/mes/'+a+'/'+m).then(function(d){CACHE[k]=d;return d});
+    return p.then(function(d){
+      if(push)history.pushState({a:a,m:m},'',urlMes(a,m));
+      pintar(d);
+      if(push)window.scrollTo({top:0,behavior:'smooth'});
+    }).catch(function(){
+      $('estado').hidden=false;$('main').hidden=true;
+      $('estado').innerHTML='Ese mes no está disponible. <a href="'+BASE+'/" style="color:var(--gold)">Ver el mes actual</a>';
+    });
+  }
+  window.addEventListener('popstate',function(){var s=slugPath()||ACTUAL;if(s)abrir(s.anio,s.mes,false)});
+
+  /* ---------- selector + histórico ---------- */
+  function renderSelector(){
+    var asc=LISTA.slice().sort(function(x,y){return key(x.anio,x.mes)-key(y.anio,y.mes)});
+    $('mSel').innerHTML=asc.slice().reverse().map(function(m){return '<option value="'+m.anio+'-'+pad(m.mes)+'">'+MESES[m.mes-1].charAt(0).toUpperCase()+MESES[m.mes-1].slice(1)+' '+m.anio+(ACTUAL&&ACTUAL.anio===m.anio&&ACTUAL.mes===m.mes?' · mes actual':'')+'</option>'}).join('');
+    $('mSel').onchange=function(){var p=this.value.split('-');abrir(+p[0],+p[1],true)};
+    $('mPrev').onclick=function(){step(-1)};$('mNext').onclick=function(){step(1)};
+    function step(dir){
+      var i=asc.findIndex(function(m){return key(m.anio,m.mes)===CURKEY});var n=asc[i+dir];if(n)abrir(n.anio,n.mes,true);
+    }
+    $('monthbar').hidden=false;
+  }
+  function renderHistorico(){
+    var h='',yr=null;
+    LISTA.slice().sort(function(x,y){return key(y.anio,y.mes)-key(x.anio,x.mes)}).forEach(function(m){
+      if(m.anio!==yr){yr=m.anio;h+='<h3 class="yr">'+m.anio+'</h3>'}
+      var cur=ACTUAL&&ACTUAL.anio===m.anio&&ACTUAL.mes===m.mes;
+      h+='<a class="hm'+(cur?' cur':'')+'" href="'+urlMes(m.anio,m.mes)+'" data-m="'+m.anio+'-'+m.mes+'"><b>'+MESES[m.mes-1]+'</b>'
+        +'<span>'+esc(m.titulo||('Actividades de '+MESES[m.mes-1]+' '+m.anio))+'</span>'
+        +'<span>'+m.eventos+' '+(m.eventos===1?'actividad':'actividades')+(m.entrevista?' · con entrevista':'')+'</span>'
+        +(cur?'<i>Mes actual</i>':'')+'</a>';
+    });
+    $('histBox').innerHTML=h;
+    $('histBox').onclick=function(e){var a=e.target.closest('a[data-m]');if(!a)return;e.preventDefault();var p=a.dataset.m.split('-');abrir(+p[0],+p[1],true)};
+  }
+
+  /* ---------- pintar un mes ---------- */
+  function pintar(d){
+    var Y=d.anio,M=d.mes-1,mesN=MESES[M],K=key(d.anio,d.mes);CURKEY=K;
+    $('estado').hidden=true;$('main').hidden=false;
+    $('mSel').value=Y+'-'+pad(d.mes);
+    var asc=LISTA.slice().sort(function(x,y){return key(x.anio,x.mes)-key(y.anio,y.mes)});
+    var i=asc.findIndex(function(m){return key(m.anio,m.mes)===K});
+    $('mPrev').disabled=i<=0;$('mNext').disabled=i<0||i>=asc.length-1;
+    var titulo=d.titulo||('Actividades de '+mesN+' '+Y);
+    document.title=titulo+' · Centro de Yoga Salvadora Conesa';
+
+    /* aviso de archivo */
+    var esAct=ACTUAL&&ACTUAL.anio===d.anio&&ACTUAL.mes===d.mes, av=$('avisoArch');
+    if(ACTUAL&&!esAct){av.hidden=false;av.firstElementChild.innerHTML=(K<key(ACTUAL.anio,ACTUAL.mes)?'Estás viendo el archivo de <b>'+mesN+' '+Y+'</b>. ':'Estás viendo un mes próximo. ')+'<a href="'+BASE+'/" data-actual="1">Ir al mes actual →</a>';
+      av.firstElementChild.querySelector('a').onclick=function(e){e.preventDefault();history.pushState({},'',BASE+'/');abrir(ACTUAL.anio,ACTUAL.mes,false)};
+    }else av.hidden=true;
+
+    /* portada */
+    var t=esc(titulo),r=esc(mesN);
+    $('hTitle').innerHTML=t.replace(new RegExp(r,'i'),function(x){return '<em>'+x+'</em>'});
+    $('hLead').textContent=d.lead||'';$('hLead').hidden=!d.lead;
+    var ev=d.eventos||[];
+    $('hChips').innerHTML=ev.map(function(e){var s=when(e.inicio);return '<li><b>'+s.getDate()+'</b> '+esc(e.titulo)+'</li>'}).join('')+(d.rutina?'<li><b>Todo el mes</b> Yoga y meditación</li>':'');
+    var poster=null;
+    ev.forEach(function(e){(e.botones||[]).forEach(function(b){if(!poster&&b.poster)poster=b.poster})});
+    if(!poster&&d.entrevista&&d.entrevista.poster)poster='/videos/'+d.entrevista.poster;
+    bg.style.backgroundImage=poster?'url("'+poster+'")':'';
+    $('hBtnEnt').hidden=!d.entrevista;
+    document.querySelector('[data-nav="rutina"]').hidden=!d.rutina;
+    document.querySelector('[data-nav="entrevista"]').hidden=!d.entrevista;
+
+    /* calendario + eventos */
+    var inicioMes=new Date(Y,M,1),finMes=new Date(Y,M+1,0,23,59);
+    var pasado=NOW>finMes,futuro=NOW<inicioMes;
+    $('cKicker').textContent=mesN.charAt(0).toUpperCase()+mesN.slice(1)+' de un vistazo';
+    $('cH2').textContent=pasado?'Así fue el mes':futuro?'Lo que viene este mes':'Lo que ha pasado y lo que viene';
+    $('cSub').textContent=d.subtituloCalendario||(pasado?'Archivo de este mes: carteles, vídeos y entrevista tal y como se vivieron.':'Guardamos aquí todo el mes, también lo ya celebrado.');
+    $('calH3').textContent=mesN.charAt(0).toUpperCase()+mesN.slice(1)+' '+Y;
+    $('calBox').setAttribute('aria-label','Calendario de '+mesN+' de '+Y);
+    var cls=(d.diasClase||[]);
+    $('calLegend').innerHTML='<span><i style="background:rgba(197,160,89,.5)"></i>Evento</span><span><i style="background:rgba(255,255,255,.25)"></i>Ya celebrado</span>'
+      +(cls.length?'<span><i style="background:var(--gold)"></i>Clases ('+cls.map(function(n){return DIAS_C[n]}).join(' · ')+')</span>':'');
+    var hasEntrevista=!!d.entrevista;
+    $('events').innerHTML=ev.map(function(e,n){
+      var s=when(e.inicio),dow=DIAS[s.getDay()];
+      var bt=(e.botones||[]).filter(function(b){return b.tipo!=='capitulo'||hasEntrevista}).map(function(b){
+        var cls='btn btn--'+(b.estilo==='p'?'p':'g')+' btn--s'+(b.cuando==='vivo'?' cta-live':b.cuando==='pasado'?' cta-past':'');
+        if(b.tipo==='link')return '<a class="'+cls+'" href="'+esc(b.url)+'" target="_blank" rel="noopener">'+esc(b.texto)+'</a>';
+        if(b.tipo==='video')return '<button class="'+cls+'" data-video="'+esc(b.url)+'" data-poster="'+esc(b.poster||'')+'" type="button">'+esc(b.texto)+'</button>';
+        if(b.tipo==='imagen')return '<button class="'+cls+'" data-img="'+esc(b.url)+'" data-alt="'+esc(b.alt||'')+'" type="button">'+esc(b.texto)+'</button>';
+        return '<button class="'+cls+'" data-t="'+(+b.t||0)+'" type="button">'+esc(b.texto)+'</button>';
+      }).join('');
+      return '<article class="ev rv" id="ev-'+n+'" data-start="'+esc(e.inicio)+'" data-end="'+esc(e.fin)+'">'
+        +'<div class="ev__date"><span class="dow">'+dow+'</span><span class="day">'+s.getDate()+'</span><span class="mon">'+mesN.charAt(0).toUpperCase()+mesN.slice(1)+'</span></div>'
+        +'<div class="ev__body"><div class="ev__top"><span class="tag">'+esc(e.etiqueta||'Actividad')+'</span><span class="state"></span></div>'
+        +'<h3>'+esc(e.titulo)+'</h3>'+(e.descripcion?'<p>'+e.descripcion+'</p>':'')
+        +((e.detalles||[]).length?'<ul class="meta">'+e.detalles.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')
+        +(bt?'<div class="btns">'+bt+'</div>':'')
+        +(e.notaPasado?'<p class="note-past">'+esc(e.notaPasado)+'</p>':'')
+        +'</div></article>';
+    }).join('')||'<p class="vacio">Este mes no tiene actividades especiales; las clases habituales continúan.</p>';
+    var evInfo={};
+    document.querySelectorAll('#events .ev[data-end]').forEach(function(el){
+      var s=when(el.dataset.start),e=when(el.dataset.end),st=el.querySelector('.state'),past=NOW>e,same=NOW.toDateString()===s.toDateString();
+      el.classList.toggle('is-past',past);
+      st.textContent=past?'Celebrado':NOW>=s?'En curso ahora':same?'Hoy':'Próximamente';
+      if(!evInfo[s.getDate()])evInfo[s.getDate()]={id:el.id,past:past};
+    });
+    var g=$('calGrid');g.innerHTML='';
+    ['L','M','X','J','V','S','D'].forEach(function(x){var c=document.createElement('div');c.className='cal__dow';c.textContent=x;g.appendChild(c)});
+    var first=(new Date(Y,M,1).getDay()+6)%7,days=new Date(Y,M+1,0).getDate(),next=null;
+    Object.keys(evInfo).sort(function(a,b){return a-b}).forEach(function(k){if(!evInfo[k].past&&next===null)next=+k});
+    for(var q=0;q<first;q++)g.appendChild(document.createElement('div'));
+    for(var n=1;n<=days;n++){
+      var dt=new Date(Y,M,n),b=document.createElement('button');
+      b.type='button';b.className='cal__d';b.textContent=n;
+      if(cls.indexOf(dt.getDay())>=0)b.classList.add('cls');
+      if(NOW>new Date(Y,M,n,23,59))b.classList.add('past');
+      if(NOW.getFullYear()===Y&&NOW.getMonth()===M&&NOW.getDate()===n)b.classList.add('today');
+      if(evInfo[n]){
+        b.classList.add('has');if(evInfo[n].past)b.classList.add('past');else if(n===next)b.classList.add('next');
+        (function(id){b.addEventListener('click',function(){$(id).scrollIntoView({behavior:'smooth',block:'center'})})})(evInfo[n].id);
+        b.setAttribute('aria-label','Ver evento del '+n+' de '+mesN);
+      }else{b.disabled=true;b.style.cursor='default'}
+      g.appendChild(b);
+    }
+    $('calToday').textContent=(NOW.getFullYear()===Y&&NOW.getMonth()===M)?'Hoy es '+NOW.getDate()+' de '+mesN:'';
+
+    pintarRutina(d,mesN);
+    pintarEntrevista(d);
+    $('aviso').textContent=(d.entrevista&&d.entrevista.extra&&d.entrevista.extra.aviso)||'';$('aviso').hidden=!$('aviso').textContent;
+    document.querySelectorAll('#histBox a.hm').forEach(function(a){a.classList.toggle('cur',!!ACTUAL&&a.dataset.m===ACTUAL.anio+'-'+ACTUAL.mes)});
+    reveal($('main'));
+  }
+
+  function pintarRutina(d){
+    var r=d.rutina,sec=$('rutina');
+    if(!r||!(r.tarjetas||[]).length){sec.hidden=true;$('rutinaBox').innerHTML='';return}
+    sec.hidden=false;
+    $('rutinaBox').innerHTML='<p class="kicker">'+esc(r.kicker||'Todo el mes')+'</p><h2>'+esc(r.titulo||'Tu rutina de bienestar')+'</h2><hr class="rule">'
+      +(r.subtitulo?'<p class="sec-sub">'+esc(r.subtitulo)+'</p>':'')
+      +'<div class="grid">'+r.tarjetas.map(function(c){
+        return '<article class="card rv"><h3>'+esc(c.titulo)+'</h3>'+(c.sub?'<p class="sub">'+esc(c.sub)+'</p>':'')
+          +((c.horarios||[]).length?'<ul class="sched">'+c.horarios.map(function(h){return '<li><span>'+esc(h[0])+'</span><span>'+esc(h[1])+'</span></li>'}).join('')+'</ul>':'')
+          +(c.html||'')+'</article>';
+      }).join('')+'</div>';
+  }
+
+  function pintarEntrevista(d){
+    var en=d.entrevista,sec=$('entrevista');
+    if(P){P.destroy();P=null}
+    if(!en){sec.hidden=true;$('entBox').innerHTML='';return}
+    sec.hidden=false;
+    var x=en.extra||{},caps=en.capitulos||[],V=function(n){return n?'/videos/'+encodeURI(n):''};
+    var h='<p class="kicker">'+esc(en.kicker||'Entrevista')+'</p><h2>'+esc(en.titulo||'Entrevista')+'</h2><hr class="rule">'+(en.subtitulo?'<p class="sec-sub">'+esc(en.subtitulo)+'</p>':'');
+    h+='<div class="who rv">'
+      +(en.entrevistador?'<div><small>Entrevistador</small><b>'+esc(en.entrevistador)+'</b><span>'+esc(en.medio||'')+'</span></div>':'')
+      +(en.invitada?'<div><small>Invitada</small><b>'+esc(en.invitada)+'</b><span>'+esc(en.invitadaDetalle||'')+'</span></div>':'')
+      +(en.duracion?'<div><small>Duración</small><b>'+esc(en.duracion)+'</b>'+(en.videoResumen&&en.duracionResumen?'<span>Versión resumida: '+esc(en.duracionResumen)+'</span>':'')+'</div>':'')
+      +'</div>';
+    h+='<div class="player" id="player"><div class="pl-left">'
+      +(en.videoResumen?'<div class="tabs" role="group" aria-label="Versión del vídeo"><button type="button" id="tabFull" aria-pressed="true">Entrevista completa</button><button type="button" id="tabShort" aria-pressed="false">Resumen '+esc(en.duracionResumen||'')+'</button></div>':'')
+      +'<div class="video"><video id="mm-video" controls preload="metadata" playsinline'+(en.poster?' poster="'+V(en.poster)+'"':'')+'><source src="'+V(en.videoCompleto)+'" type="video/mp4">Tu navegador no puede reproducir este vídeo.</video></div>'
+      +'<div class="now" aria-live="polite"><small>Ahora en el vídeo</small><h4 id="nowT"></h4><p id="nowD">Pulsa play o elige un capítulo.</p></div></div>'
+      +(caps.length?'<ol class="chap" id="chap">'+caps.map(function(c){return '<li><button type="button" data-t="'+c.t+'"><span class="row"><time>'+fmtT(c.t)+'</time><b>'+esc(c.titulo)+'</b></span><span class="d">'+esc(c.descripcion||'')+'</span><i class="fill"></i></button></li>'}).join('')+'</ol>':'')
+      +'</div>';
+    if((x.destacados||[]).length)h+='<div class="cards4">'+x.destacados.map(function(c){return '<div class="card rv"><span class="ic">'+esc(c.icono||'')+'</span><h4>'+esc(c.titulo)+'</h4><p>'+esc(c.texto)+'</p></div>'}).join('')+'</div>';
+    if(x.cita&&x.cita.texto)h+='<blockquote class="quote rv">«'+esc(x.cita.texto)+'»<small>'+esc(x.cita.autor||'')+'</small></blockquote>';
+    var hasP=x.pasos&&(x.pasos.items||[]).length,hasH=x.historia&&x.historia.texto;
+    if(hasP||hasH){
+      h+='<div class="two">';
+      if(hasP)h+='<div class="rv"><h3 class="sm">'+esc(x.pasos.titulo||'')+'</h3><ol class="steps">'+x.pasos.items.map(function(s){return '<li><b>'+esc(s.b)+'</b> '+esc(s.texto||'')+'</li>'}).join('')+'</ol></div>';
+      if(hasH)h+='<div class="rv"><h3 class="sm">'+esc(x.historia.titulo||'')+'</h3><div class="story"><h4>'+esc(x.historia.h4||'')+'</h4><p>'+esc(x.historia.texto)+'</p>'+(x.historia.t!=null?'<button class="btn btn--g btn--s" data-t="'+(+x.historia.t)+'" type="button">'+esc(x.historia.boton||'▶ Verlo en la entrevista')+'</button>':'')+'</div></div>';
+      h+='</div>';
+    }
+    $('entBox').innerHTML=h;
+    P=crearPlayer(en);
+  }
+
+  /* ---------- vídeo y capítulos ---------- */
+  function crearPlayer(en){
+    var v=$('mm-video'),chap=$('chap'),
+        btns=chap?[].slice.call(chap.querySelectorAll('button')):[],
+        lis=btns.map(function(b){return b.parentNode}),times=btns.map(function(b){return +b.dataset.t}),
+        nowT=$('nowT'),nowD=$('nowD'),tabFull=$('tabFull'),tabShort=$('tabShort'),
+        mode='full',cur=-1,
+        FULL='/videos/'+encodeURI(en.videoCompleto||''),SHORT=en.videoResumen?'/videos/'+encodeURI(en.videoResumen):'';
+    function setMode(m,cb){
+      if(m==='short'&&!SHORT)return;
+      if(m===mode){cb&&cb();return}
+      mode=m;
+      if(tabFull){tabFull.setAttribute('aria-pressed',m==='full');tabShort.setAttribute('aria-pressed',m==='short')}
+      if(chap)chap.classList.toggle('off',m==='short');
+      v.pause();v.src=(m==='full')?FULL:SHORT;v.load();
+      if(cb)v.addEventListener('loadedmetadata',function f(){v.removeEventListener('loadedmetadata',f);cb()});
+      if(m==='short'){nowT.textContent='Resumen de '+(en.duracionResumen||'')+'';nowD.textContent='Lo mejor de la conversación. Cambia a «Entrevista completa» para usar los capítulos.'}
+      else update();
+    }
+    function seek(sec){
+      setMode('full',function(){
+        v.currentTime=sec;var p=v.play();if(p&&p.catch)p.catch(function(){});
+        $('player').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    }
+    function update(){
+      if(mode!=='full'||!times.length)return;
+      var c=v.currentTime,idx=0,i;
+      for(i=0;i<times.length;i++){if(c>=times[i])idx=i}
+      for(i=0;i<lis.length;i++){
+        lis[i].classList.toggle('done',i<idx);
+        var f=lis[i].querySelector('.fill');
+        if(i===idx){var end=(i+1<times.length)?times[i+1]:(v.duration||times[i]+70);f.style.width=Math.max(0,Math.min(100,(c-times[i])/(end-times[i])*100))+'%'}
+        else f.style.width='';
+      }
+      if(idx!==cur){
+        cur=idx;
+        lis.forEach(function(l,k){l.classList.toggle('on',k===idx)});
+        nowT.textContent=btns[idx].querySelector('b').textContent;
+        nowD.textContent=btns[idx].querySelector('.d').textContent;
+        var l=lis[idx];chap.scrollTo({top:l.offsetTop-chap.offsetTop-8,behavior:'smooth'});
+      }
+    }
+    if(tabFull){tabFull.addEventListener('click',function(){setMode('full')});tabShort.addEventListener('click',function(){setMode('short')})}
+    v.addEventListener('timeupdate',update);v.addEventListener('seeked',update);
+    if(btns.length){update()}else{nowT.textContent=en.titulo||''}
+    return {seek:seek,destroy:function(){try{v.pause()}catch(e){}}};
+  }
+
+  init();
 })();
 </script>
 </body>

@@ -9,6 +9,9 @@
  *                              con soporte de Range (206) para que el vídeo se pueda adelantar.
  *   - /healthz               → comprobación de salud para Dokploy
  *   - /api/estado            → diagnóstico: ¿encuentra los medios? ¿conecta con Postgres?
+ *   - /api/meses, /api/mes/actual, /api/mes/AAAA/MM   → contenido de cada mes (desde Postgres)
+ *   - /AAAA-MM               → la misma página, abierta en ese mes (histórico)
+ *   - /admin  + /api/admin/* → panel con contraseña: crear/editar meses, subir flyers y vídeos
  *
  * Nada pesado vive en Git. Los medios salen de disco compartido y, si no están,
  * se busca su ruta en la tabla media_assets de la base de datos Postgres compartida.
@@ -20,6 +23,10 @@
  *   DATABASE_URL          postgres://… de la base compartida "salvadora" (si falta, se omite la BD)
  *   MEDIA_TABLE           tabla de medios ("public"."media_assets" por defecto)
  *   LANDING_URL           web principal (https://salvadoraconesa.es)
+ *   ADMIN_PASSWORD        contraseña del panel /admin (si falta, el panel queda desactivado)
+ *   ADMIN_SECRET          (opcional) secreto para firmar la sesión; por defecto se deriva de la contraseña
+ *   ACTIVIDADES_SCHEMA    esquema Postgres donde viven las tablas (actividades)
+ *   MAX_UPLOAD_MB         tamaño máximo por archivo subido desde el panel (800)
  */
 'use strict';
 const http = require('http');
@@ -52,6 +59,12 @@ if (process.env.DATABASE_URL) {
     dbState = 'configurada';
   } catch (e) { dbState = 'módulo pg no instalado'; }
 }
+const db = require('./db').create(pool);
+const crypto = require('crypto');
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const ADMIN_SECRET = process.env.ADMIN_SECRET || (ADMIN_PASSWORD ? 'adm:' + ADMIN_PASSWORD : '');
+const MAX_UPLOAD = (parseInt(process.env.MAX_UPLOAD_MB || '800', 10) || 800) * 1024 * 1024;
+let dbIniciada = db.dbActiva ? 'pendiente' : 'modo archivo (solo lectura)';
 async function dbLookup(baseName) {
   if (!pool) return null;
   try {
@@ -111,6 +124,70 @@ function sendFile(req, res, file, mime, cache) {
   s.on('error', () => res.destroy()); res.on('close', () => s.destroy()); s.pipe(res);
 }
 
+/* ---------- sesión del panel de administración ---------- */
+const sign = (v) => crypto.createHmac('sha256', ADMIN_SECRET).update(v).digest('hex');
+function tEq(a, b) { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); }
+function makeToken() { const exp = String(Date.now() + 12 * 3600 * 1000); return exp + '.' + sign(exp); }
+function isAdmin(req) {
+  if (!ADMIN_PASSWORD) return false;
+  const m = /(?:^|;\s*)adm=([^;]+)/.exec(req.headers.cookie || '');
+  if (!m) return false;
+  const [exp, sig] = decodeURIComponent(m[1]).split('.');
+  return !!exp && !!sig && +exp > Date.now() && tEq(sig, sign(exp));
+}
+const loginFails = new Map();
+function throttled(ip) {
+  const f = loginFails.get(ip);
+  return !!f && f.n >= 8 && Date.now() - f.t < 10 * 60 * 1000;
+}
+function jsonOut(res, code, obj, extra) {
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...(extra || {}) });
+  res.end(JSON.stringify(obj));
+}
+function readBody(req, limit = 2 * 1024 * 1024) {
+  return new Promise((resolve, reject) => {
+    let n = 0; const chunks = [];
+    req.on('data', (c) => { n += c.length; if (n > limit) { reject(Object.assign(new Error('Cuerpo demasiado grande'), { status: 413 })); req.destroy(); } else chunks.push(c); });
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('error', reject);
+  });
+}
+const UPLOAD_EXT = new Set(['.mp4', '.webm', '.jpg', '.jpeg', '.png', '.webp', '.pdf']);
+function cleanName(n) {
+  const base = path.basename(String(n || '')).normalize('NFC').replace(/[^\w.\-áéíóúñüÁÉÍÓÚÑÜ]+/g, '_').replace(/^\.+/, '');
+  return base.slice(0, 120);
+}
+async function handleUpload(req, res, q) {
+  const tipo = q.get('tipo');
+  if (!['videos', 'flyers'].includes(tipo)) return jsonOut(res, 400, { error: 'tipo debe ser videos o flyers' });
+  const nombre = cleanName(q.get('nombre'));
+  const ext = path.extname(nombre).toLowerCase();
+  if (!nombre || !UPLOAD_EXT.has(ext)) return jsonOut(res, 400, { error: 'Nombre o extensión no permitida (mp4, webm, jpg, png, webp, pdf)' });
+  const len = parseInt(req.headers['content-length'] || '0', 10);
+  if (len > MAX_UPLOAD) return jsonOut(res, 413, { error: `Archivo demasiado grande (máx. ${MAX_UPLOAD / 1048576} MB)` });
+  const dir = path.join(ROOT, MEDIA_DIRS[tipo]);
+  const dest = safeJoin(dir, nombre);
+  if (!dest) return jsonOut(res, 400, { error: 'Nombre no válido' });
+  // La carpeta de medios es COMPARTIDA con la landing: nunca se pisa un archivo existente.
+  if (exists(dest) && q.get('sobrescribir') !== '1') return jsonOut(res, 409, { error: 'Ya existe un archivo con ese nombre. Cambia el nombre.', existe: true });
+  try { fs.mkdirSync(dir, { recursive: true }); } catch (e) { return jsonOut(res, 500, { error: 'No se puede crear la carpeta de medios: ' + e.code }); }
+  const tmp = dest + '.subiendo-' + process.pid;
+  let n = 0, abortado = false;
+  const out = fs.createWriteStream(tmp, { flags: 'wx' });
+  out.on('error', (e) => { if (!abortado) { abortado = true; try { fs.unlinkSync(tmp); } catch {} jsonOut(res, 500, { error: 'No se pudo escribir en la carpeta de medios (' + (e.code || e.message) + '). Revisa permisos del volumen.' }); } });
+  req.on('data', (c) => {
+    n += c.length;
+    if (n > MAX_UPLOAD && !abortado) { abortado = true; req.unpipe(out); out.destroy(); try { fs.unlinkSync(tmp); } catch {} jsonOut(res, 413, { error: 'Archivo demasiado grande' }); req.destroy(); }
+  });
+  req.on('aborted', () => { abortado = true; out.destroy(); try { fs.unlinkSync(tmp); } catch {} });
+  out.on('finish', () => {
+    if (abortado) return;
+    try { fs.renameSync(tmp, dest); } catch (e) { try { fs.unlinkSync(tmp); } catch {} return jsonOut(res, 500, { error: 'No se pudo guardar: ' + e.code }); }
+    jsonOut(res, 200, { ok: true, tipo, nombre, bytes: n, url: `/${tipo}/${nombre}` });
+  });
+  req.pipe(out);
+}
+
 const CHECK = [
   ['videos', 'Promo_Bienestar-Experience-2026_1920x1080.mp4'],
   ['videos', 'Promo_Bienestar-Experience-2026_1920x1080-poster.jpg'],
@@ -124,10 +201,85 @@ const CHECK = [
 /* ---------- servidor ---------- */
 const server = http.createServer(async (req, res) => {
   try {
-    if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); return res.end(); }
     const u = new URL(req.url, 'http://x');
+    const escribe = req.method === 'POST' || req.method === 'DELETE';
+    if (req.method !== 'GET' && req.method !== 'HEAD' && !(escribe && u.pathname.startsWith('/api/admin/'))) { res.writeHead(405); return res.end(); }
     let p;
     try { p = decodeURIComponent(u.pathname); } catch { res.writeHead(400); return res.end(); }
+
+
+    const mAnio = /^\/api\/mes\/(\d{4})\/(\d{1,2})$/.exec(p);
+
+    const q = u.searchParams;
+    /* ----- API pública ----- */
+    if (p === '/api/meses') {
+      return jsonOut(res, 200, { meses: await db.listarMeses(), actual: await db.mesActual() }, { 'Cache-Control': 'no-cache' });
+    }
+    if (p === '/api/mes/actual') {
+      const a = await db.mesActual();
+      if (!a) return jsonOut(res, 404, { error: 'Aún no hay ningún mes publicado' });
+      return jsonOut(res, 200, await db.getMes(a.anio, a.mes), { 'Cache-Control': 'no-cache' });
+    }
+    if (mAnio) {
+      const d = await db.getMes(mAnio[1], mAnio[2], { admin: isAdmin(req) });
+      if (!d) return jsonOut(res, 404, { error: 'Mes no encontrado' });
+      return jsonOut(res, 200, d, { 'Cache-Control': 'no-cache' });
+    }
+
+    /* ----- panel de administración ----- */
+    if (p === '/admin' || p === '/admin/') {
+      const f = safeJoin(PUBLIC, 'admin.html');
+      return sendFile(req, res, f, null, 'no-store');
+    }
+    if (p.startsWith('/api/admin/')) {
+      if (!ADMIN_PASSWORD) return jsonOut(res, 503, { error: 'Panel desactivado: falta la variable ADMIN_PASSWORD en Dokploy.' });
+      if (p === '/api/admin/login' && req.method === 'POST') {
+        const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+        if (throttled(ip)) return jsonOut(res, 429, { error: 'Demasiados intentos. Espera unos minutos.' });
+        let b = {}; try { b = JSON.parse(await readBody(req, 10000)); } catch {}
+        if (!tEq(String(b.password || ''), ADMIN_PASSWORD)) {
+          const f = loginFails.get(ip) || { n: 0, t: 0 }; loginFails.set(ip, { n: f.n + 1, t: Date.now() });
+          return jsonOut(res, 401, { error: 'Contraseña incorrecta' });
+        }
+        loginFails.delete(ip);
+        const secure = (req.headers['x-forwarded-proto'] || '') === 'https' ? '; Secure' : '';
+        return jsonOut(res, 200, { ok: true }, { 'Set-Cookie': `adm=${encodeURIComponent(makeToken())}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200${secure}` });
+      }
+      if (p === '/api/admin/logout') return jsonOut(res, 200, { ok: true }, { 'Set-Cookie': 'adm=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0' });
+      if (!isAdmin(req)) return jsonOut(res, 401, { error: 'No autorizado' });
+      // protección CSRF extra: las escrituras deben venir del propio sitio
+      if (req.method !== 'GET' && req.headers.origin) {
+        let oh = ''; try { oh = new URL(req.headers.origin).host; } catch {}
+        if (oh !== req.headers.host) return jsonOut(res, 403, { error: 'Origen no permitido' });
+      }
+      if (p === '/api/admin/estado') return jsonOut(res, 200, { ok: true, bd: db.dbActiva, escritura: db.dbActiva, mediaRoot: ROOT, maxUploadMB: MAX_UPLOAD / 1048576 });
+      if (p === '/api/admin/meses') return jsonOut(res, 200, { meses: await db.listarMeses({ admin: true }) });
+      if (p === '/api/admin/subir' && req.method === 'POST') return handleUpload(req, res, q);
+      if (p === '/api/admin/medios') {
+        const out = {};
+        for (const k of ['videos', 'flyers']) {
+          try { out[k] = fs.readdirSync(path.join(ROOT, k)).filter((n) => UPLOAD_EXT.has(path.extname(n).toLowerCase())).sort(); } catch { out[k] = []; }
+        }
+        return jsonOut(res, 200, out);
+      }
+      const mA = /^\/api\/admin\/mes\/(\d{4})\/(\d{1,2})$/.exec(p);
+      if (mA) {
+        if (req.method === 'GET') {
+          const d = await db.getMes(mA[1], mA[2], { admin: true });
+          return d ? jsonOut(res, 200, d) : jsonOut(res, 404, { error: 'Mes no encontrado' });
+        }
+        if (req.method === 'DELETE') {
+          const ok = await db.borrarMes(mA[1], mA[2]);
+          return jsonOut(res, ok ? 200 : 404, { ok });
+        }
+      }
+      if (p === '/api/admin/mes' && req.method === 'POST') {
+        let doc; try { doc = JSON.parse(await readBody(req)); } catch { return jsonOut(res, 400, { error: 'JSON no válido' }); }
+        try { return jsonOut(res, 200, { ok: true, ...(await db.guardarMes(doc)) }); }
+        catch (e) { return jsonOut(res, 400, { error: e.message }); }
+      }
+      return jsonOut(res, 404, { error: 'No encontrado' });
+    }
 
     if (p === '/healthz') { res.writeHead(200, { 'Content-Type': 'text/plain' }); return res.end('ok'); }
 
@@ -136,7 +288,7 @@ const server = http.createServer(async (req, res) => {
       for (const [k, f] of CHECK) media[`${k}/${f}`] = !!(await resolveMedia(k, f));
       if (pool) { try { await pool.query('SELECT 1'); dbState = 'ok'; } catch (e) { dbState = 'error: ' + e.message; } }
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-      return res.end(JSON.stringify({ ok: true, mediaRoot: ROOT, extra: EXTRA || null, baseDeDatos: dbState, medios: media }, null, 2));
+      return res.end(JSON.stringify({ ok: true, mediaRoot: ROOT, extra: EXTRA || null, baseDeDatos: dbState, actividades: dbIniciada, panelAdmin: !!ADMIN_PASSWORD, medios: media }, null, 2));
     }
 
     if (p === '/config.js') {
@@ -151,7 +303,8 @@ const server = http.createServer(async (req, res) => {
       return sendFile(req, res, r.file, r.mime, 'public, max-age=86400');
     }
 
-    const rel = (p === '/' || p === '/servicios' || p === '/servicios/') ? 'index.html' : p.replace(/^\/+/, '');
+    const esPagina = p === '/' || /^\/servicios\/?$/.test(p) || /^(\/servicios)?\/\d{4}-\d{2}\/?$/.test(p);
+    const rel = esPagina ? 'index.html' : p.replace(/^\/+/, '');
     const f = safeJoin(PUBLIC, rel);
     if (f && exists(f)) return sendFile(req, res, f, null, rel.endsWith('.html') ? 'no-cache' : 'public, max-age=3600');
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('No encontrado');
@@ -160,7 +313,12 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) res.writeHead(500); res.end('Error interno');
   }
 });
-server.listen(PORT, () => {
-  console.log(`Actividades noviembre 2026 en http://localhost:${PORT}`);
-  console.log(`Medios: ${ROOT}${EXTRA ? '  (+ extra: ' + EXTRA + ')' : ''} · BD: ${dbState}`);
-});
+async function arrancar() {
+  try { dbIniciada = await db.iniciar(); }
+  catch (e) { dbIniciada = 'error: ' + e.message; console.error('[db] ' + e.message); }
+  server.listen(PORT, () => {
+    console.log(`Actividades del mes en http://localhost:${PORT}`);
+    console.log(`Medios: ${ROOT}${EXTRA ? '  (+ extra: ' + EXTRA + ')' : ''} · BD: ${dbState} · Actividades: ${dbIniciada} · Panel: ${ADMIN_PASSWORD ? 'activo' : 'desactivado'}`);
+  });
+}
+arrancar();

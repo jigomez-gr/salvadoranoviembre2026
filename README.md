@@ -9,3 +9,8 @@ Centro de Yoga Salvadora Conesa (Fuenlabrada).
 - Diagnóstico: `/healthz` y `/api/estado`.
 
 Para cambiar un evento, edita su `<article class="ev">` en `public/index.html` (`data-start` / `data-end` controlan el estado automático).
+
+
+## v2: meses en base de datos
+
+Página pública dinámica (`/` = mes en curso, `/AAAA-MM` = histórico) y panel `/admin`. Ver `DOKPLOY.md`. Archivos nuevos: `db.js`, `seed/`, `public/admin.html`.

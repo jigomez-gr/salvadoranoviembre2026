@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administración · Actividades del mes</title>
+<style>
+:root{--bg:#1b0911;--bg2:#26101b;--ink:#f7f1e6;--soft:#d6c6c8;--gold:#c5a059;--lotus:#8f1d3a;--lotus-l:#f0b9c6;--line:rgba(255,255,255,.14);--card:rgba(255,255,255,.055);--ok:#7bd88f;--err:#ff8f8f;
+  --sans:"Outfit","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+h1,h2,h3{font-family:var(--serif);margin:0}
+a{color:var(--gold)}
+button,input,select,textarea{font:inherit;color:var(--ink)}
+input,select,textarea{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+input[type=checkbox]{width:auto}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(197,160,89,.6);outline-offset:0}
+select option{background:#26101b}
+textarea{min-height:84px;resize:vertical;line-height:1.45}
+textarea.mono,input.mono{font-family:Consolas,Menlo,monospace;font-size:.85rem}
+label{display:block;font-size:.78rem;color:var(--soft);letter-spacing:.04em;margin:0 0 4px}
+.btn{cursor:pointer;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.07);padding:8px 18px;font-weight:500}
+.btn:hover{border-color:var(--gold)}
+.btn.p{background:var(--lotus);border-color:var(--lotus)}
+.btn.p:hover{background:#a8244a}
+.btn.s{padding:5px 12px;font-size:.82rem}
+.btn.d{border-color:rgba(255,143,143,.5);color:var(--err)}
+.btn:disabled{opacity:.4;cursor:default}
+header.bar{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:0;z-index:5}
+header.bar h1{font-size:1.5rem;flex:1}
+#login{max-width:380px;margin:12vh auto;padding:30px;background:var(--card);border:1px solid var(--line);border-radius:18px}
+#login h1{margin-bottom:6px}
+.err{color:var(--err);font-size:.88rem;min-height:1.2em;margin:8px 0 0}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:22px;max-width:1280px;margin:0 auto;padding:22px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}}
+.side{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;align-self:start;position:sticky;top:78px}
+.side h3{font-size:1.15rem;margin-bottom:10px}
+.mes{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:9px 10px;cursor:pointer}
+.mes:hover{background:rgba(255,255,255,.06)}
+.mes.on{border-color:var(--gold);background:rgba(197,160,89,.1)}
+.mes b{display:block;text-transform:capitalize}
+.mes small{color:var(--soft)}
+.tag{display:inline-block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:1px 8px;margin-left:6px;border:1px solid var(--line);color:var(--soft)}
+.tag.b{color:var(--err);border-color:rgba(255,143,143,.5)}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:18px}
+.sec>summary{cursor:pointer;padding:14px 18px;font-family:var(--serif);font-size:1.35rem;font-weight:700;list-style:none}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::before{content:"▸ ";color:var(--gold)}
+.sec[open]>summary::before{content:"▾ "}
+.sec .in{padding:4px 18px 18px}
+.row{display:grid;gap:12px;margin-bottom:12px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:1fr 1fr 1fr}.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:700px){.c2,.c3,.c4{grid-template-columns:1fr}}
+.ev{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;background:rgba(0,0,0,.18)}
+.ev>h4{margin:0 0 10px;display:flex;gap:8px;align-items:center;font-weight:600}
+.ev>h4 span{flex:1}
+.bt{display:grid;grid-template-columns:110px 1.2fr 1.6fr 90px 95px auto;gap:8px;align-items:start;margin-bottom:8px;padding:8px;border:1px dashed var(--line);border-radius:10px}
+@media(max-width:1000px){.bt{grid-template-columns:1fr 1fr}}
+.hint{color:var(--soft);font-size:.82rem;margin:2px 0 10px}
+.chk{display:inline-flex;gap:6px;align-items:center;margin-right:14px;font-size:.92rem;color:var(--ink);letter-spacing:0}
+.chk input{margin:0}
+.actions{position:sticky;bottom:0;display:flex;gap:10px;flex-wrap:wrap;padding:12px 0;background:linear-gradient(180deg,transparent,var(--bg) 35%);z-index:4}
+#toast{position:fixed;right:18px;bottom:18px;max-width:380px;padding:12px 16px;border-radius:12px;background:#12361d;border:1px solid var(--ok);z-index:20}
+#toast.e{background:#3d1313;border-color:var(--err)}
+.bar-up{height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:4px}
+.bar-up i{display:block;height:100%;width:0;background:var(--gold)}
+.bad{border-color:var(--err)!important}
+</style>
+</head>
+<body>
+
+<div id="login" hidden>
+  <h1>Administración</h1>
+  <p class="hint">Actividades del mes · Centro de Yoga Salvadora Conesa</p>
+  <label for="pw">Contraseña</label>
+  <input id="pw" type="password" autocomplete="current-password">
+  <p class="err" id="loginErr"></p>
+  <button class="btn p" id="loginBtn" type="button">Entrar</button>
+</div>
+
+<div id="app" hidden>
+  <header class="bar">
+    <h1>Actividades del mes · Administración</h1>
+    <a class="btn s" href="/" target="_blank" rel="noopener" style="text-decoration:none">Ver la web ↗</a>
+    <button class="btn s" id="logout" type="button">Salir</button>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <h3>Meses</h3>
+      <div id="lista"></div>
+      <div style="display:grid;gap:8px;margin-top:12px">
+        <button class="btn p s" id="nuevo" type="button">+ Nuevo mes</button>
+        <button class="btn s" id="importar" type="button">Importar JSON…</button>
+        <input type="file" id="fileJson" accept=".json,application/json" hidden>
+      </div>
+      <p class="hint" id="estadoBD" style="margin-top:14px"></p>
+    </aside>
+
+    <main id="editor">
+      <p class="hint">Elige un mes de la lista o crea uno nuevo.</p>
+    </main>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script>
+(function(){
+  var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  var $=function(id){return document.getElementById(id)};
+  var pad=function(n){return (n<10?'0':'')+n};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var DOC=null,LISTA=[],MEDIOS={videos:[],flyers:[]},SUCIO=false;
+
+  function api(method,url,body,raw){
+    var o={method:method,credentials:'same-origin',headers:{}};
+    if(body!==undefined){o.headers['Content-Type']='application/json';o.body=JSON.stringify(body)}
+    return fetch(url,o).then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(r.status===401&&!raw){mostrarLogin()}if(!r.ok)throw new Error(j.error||('Error '+r.status));return j})});
+  }
+  var tt;function toast(msg,err){var t=$('toast');t.textContent=msg;t.className=err?'e':'';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},err?7000:3500)}
+
+  /* ---------- sesión ---------- */
+  function mostrarLogin(){$('app').hidden=true;$('login').hidden=false;$('pw').focus()}
+  $('loginBtn').onclick=entrar;$('pw').onkeydown=function(e){if(e.key==='Enter')entrar()};
+  function entrar(){
+    $('loginErr').textContent='';
+    api('POST','/api/admin/login',{password:$('pw').value},true).then(function(){$('pw').value='';arrancar()}).catch(function(e){$('loginErr').textContent=e.message});
+  }
+  $('logout').onclick=function(){api('POST','/api/admin/logout',{},true).then(function(){location.reload()})};
+  function arrancar(){
+    api('GET','/api/admin/estado',undefined,true).then(function(s){
+      $('login').hidden=true;$('app').hidden=false;
+      $('estadoBD').textContent=s.bd?'Base de datos conectada. Medios en '+s.mediaRoot+' (máx. '+s.maxUploadMB+' MB por archivo).':'⚠ Sin base de datos: solo lectura.';
+      cargarLista();cargarMedios();
+    }).catch(function(e){
+      if(/falta la variable/.test(e.message)){$('login').hidden=false;$('loginBtn').hidden=true;$('pw').hidden=true;$('loginErr').textContent=e.message}else mostrarLogin();
+    });
+  }
+  function cargarMedios(){return api('GET','/api/admin/medios').then(function(m){MEDIOS=m})}
+  function cargarLista(){
+    return api('GET','/api/admin/meses').then(function(d){
+      LISTA=d.meses||[];
+      $('lista').innerHTML=LISTA.map(function(m){
+        var on=DOC&&DOC.anio===m.anio&&DOC.mes===m.mes;
+        return '<button type="button" class="mes'+(on?' on':'')+'" data-a="'+m.anio+'" data-m="'+m.mes+'"><b>'+MESES[m.mes-1]+' '+m.anio+(m.publicado?'':'<span class="tag b">borrador</span>')+'</b><small>'+m.eventos+' actividad(es)'+(m.entrevista?' · entrevista':'')+'</small></button>';
+      }).join('')||'<p class="hint">Aún no hay meses.</p>';
+    });
+  }
+  $('lista').onclick=function(e){
+    var b=e.target.closest('.mes');if(!b)return;
+    if(SUCIO&&!confirm('Hay cambios sin guardar en el mes abierto. ¿Descartarlos?'))return;
+    abrir(+b.dataset.a,+b.dataset.m);
+  };
+  function abrir(a,m){
+    api('GET','/api/admin/mes/'+a+'/'+m).then(function(d){DOC=d;SUCIO=false;pintar();cargarLista()}).catch(function(e){toast(e.message,true)});
+  }
+
+  /* ---------- nuevo mes / importar ---------- */
+  $('nuevo').onclick=function(){
+    if(SUCIO&&!confirm('Hay cambios sin guardar. ¿Descartarlos?'))return;
+    var ult=LISTA[0],h=new Date(),a=h.getFullYear(),m=h.getMonth()+2;
+    if(ult){a=ult.anio;m=ult.mes+1}
+    if(m>12){m=1;a++}
+    var r=prompt('¿Qué mes quieres crear? (formato AAAA-MM)',a+'-'+pad(m));if(!r)return;
+    var x=/^(\d{4})-(\d{1,2})$/.exec(r.trim());if(!x||+x[2]<1||+x[2]>12){toast('Formato no válido. Usa por ejemplo 2026-12',true);return}
+    a=+x[1];m=+x[2];
+    if(LISTA.some(function(l){return l.anio===a&&l.mes===m})){abrir(a,m);return}
+    var base=null;
+    var prev=LISTA.filter(function(l){return l.anio*12+l.mes<a*12+m}).sort(function(p,q){return (q.anio*12+q.mes)-(p.anio*12+p.mes)})[0]||LISTA[0];
+    var fin=function(){
+      DOC={anio:a,mes:m,titulo:'Actividades de '+MESES[m-1]+' '+a,lead:'',subtituloCalendario:'',diasClase:(base&&base.diasClase)||[2,3,4],
+        rutina:base?base.rutina:null,publicado:false,eventos:[],entrevista:null};
+      SUCIO=true;pintar();toast('Mes nuevo en borrador. Rellénalo y pulsa Guardar.');
+    };
+    if(prev&&confirm('¿Copiar las clases habituales ("Tu rutina de bienestar") de '+MESES[prev.mes-1]+' '+prev.anio+'?')){
+      api('GET','/api/admin/mes/'+prev.anio+'/'+prev.mes).then(function(d){base=d;fin()}).catch(fin);
+    }else fin();
+  };
+  $('importar').onclick=function(){$('fileJson').click()};
+  $('fileJson').onchange=function(){
+    var f=this.files[0];this.value='';if(!f)return;
+    var r=new FileReader();r.onload=function(){
+      try{var d=JSON.parse(r.result);if(!d.anio||!d.mes)throw new Error('Falta "anio" y "mes" en el JSON');DOC=d;SUCIO=true;pintar();toast('JSON cargado: revísalo y pulsa Guardar.')}catch(e){toast('JSON no válido: '+e.message,true)}
+    };r.readAsText(f);
+  };
+
+  /* ---------- utilidades de campos ---------- */
+  function getP(o,p){return p.split('.').reduce(function(x,k){return x==null?x:x[k]},o)}
+  function setP(o,p,v){var k=p.split('.'),l=k.pop(),t=k.reduce(function(x,y){if(x[y]==null)x[y]={};return x[y]},o);t[l]=v}
+  function fld(label,p,opts){
+    opts=opts||{};var v=getP(DOC,p);
+    var tag=opts.area?'<textarea data-p="'+p+'"'+(opts.kind?' data-kind="'+opts.kind+'"':'')+(opts.mono?' class="mono"':'')+(opts.rows?' rows="'+opts.rows+'"':'')+(opts.ph?' placeholder="'+esc(opts.ph)+'"':'')+'>'+esc(opts.fmt?opts.fmt(v):v)+'</textarea>'
+      :'<input data-p="'+p+'" type="'+(opts.type||'text')+'" value="'+esc(opts.fmt?opts.fmt(v):v)+'"'+(opts.list?' list="'+opts.list+'"':'')+(opts.ph?' placeholder="'+esc(opts.ph)+'"':'')+'>';
+    return '<div><label>'+esc(label)+'</label>'+tag+(opts.hint?'<p class="hint">'+opts.hint+'</p>':'')+'</div>';
+  }
+  var lines=function(a){return (a||[]).join('\n')};
+  function fmtT(s){s=+s||0;var h=Math.floor(s/3600),m=Math.floor(s%3600/60);return (h?h+':'+pad(m):m)+':'+pad(s%60)}
+  function parseT(x){x=String(x).trim();if(/^\d+$/.test(x))return +x;var p=x.split(':').map(Number);if(p.some(isNaN))return NaN;return p.reduce(function(a,b){return a*60+b},0)}
+  function capsToText(c){return (c||[]).map(function(k){return fmtT(k.t)+' | '+k.titulo+(k.descripcion?' | '+k.descripcion:'')}).join('\n')}
+  function textToCaps(t){
+    return t.split('\n').map(function(l){return l.trim()}).filter(Boolean).map(function(l){
+      var p=l.split('|').map(function(s){return s.trim()});var s=parseT(p[0]);
+      if(isNaN(s))throw new Error('Capítulo mal escrito: "'+l.slice(0,50)+'". Usa m:ss | título | descripción');
+      return {t:s,titulo:p[1]||'(sin título)',descripcion:p.slice(2).join(' | ')};
+    });
+  }
+
+  /* ---------- dibujar el editor ---------- */
+  function medioList(){
+    return '<datalist id="dl-vid">'+MEDIOS.videos.map(function(n){return '<option value="/videos/'+esc(n)+'">'}).join('')+'</datalist>'
+      +'<datalist id="dl-fly">'+MEDIOS.flyers.map(function(n){return '<option value="/flyers/'+esc(n)+'">'}).join('')+'</datalist>'
+      +'<datalist id="dl-vn">'+MEDIOS.videos.map(function(n){return '<option value="'+esc(n)+'">'}).join('')+'</datalist>';
+  }
+  function pintar(){
+    if(!DOC){$('editor').innerHTML='';return}
+    var d=DOC,h=medioList();
+    h+='<h2 style="font-size:2rem;margin-bottom:12px;text-transform:capitalize">'+MESES[d.mes-1]+' '+d.anio+'</h2>';
+
+    /* 1. datos */
+    h+='<details class="sec" open><summary>Datos del mes</summary><div class="in">'
+      +'<div class="row c2">'+fld('Título de la página','titulo',{hint:'Aparece en la portada y en el histórico.'})+fld('Texto de presentación (portada)','lead',{area:true,rows:3})+'</div>'
+      +'<div class="row">'+fld('Frase bajo el calendario (opcional)','subtituloCalendario',{})+'</div>'
+      +'<label>Días de clases habituales (se marcan en el calendario)</label><div style="display:flex;flex-wrap:wrap;gap:6px 0;margin-bottom:12px">'
+      +[1,2,3,4,5,6,0].map(function(n){return '<span class="chk"><input type="checkbox" data-kind="dia" data-n="'+n+'"'+((d.diasClase||[]).indexOf(n)>=0?' checked':'')+'> '+DIAS[n]+'</span>'}).join('')+'</div>'
+      +'<label class="chk"><input type="checkbox" data-p="publicado" data-kind="bool"'+(d.publicado!==false?' checked':'')+'> Publicado (si lo desmarcas queda en borrador: solo lo ves tú aquí)</label>'
+      +'</div></details>';
+
+    /* 2. eventos */
+    h+='<details class="sec" open><summary>Eventos y actividades ('+(d.eventos||[]).length+')</summary><div class="in">'
+      +(d.eventos||[]).map(evHtml).join('')
+      +'<button class="btn s" type="button" data-act="addEv">+ Añadir evento</button></div></details>';
+
+    /* 3. rutina */
+    h+='<details class="sec"><summary>Clases habituales ("Tu rutina de bienestar")</summary><div class="in">'
+      +'<p class="hint">Bloque opcional con horarios fijos. Se edita como JSON: copia el ejemplo del mes anterior y cambia solo los textos. Déjalo vacío para ocultar la sección.</p>'
+      +fld('Rutina (JSON)','rutina',{area:true,kind:'json',mono:true,rows:14,fmt:function(v){return v?JSON.stringify(v,null,2):''}})
+      +'</div></details>';
+
+    /* 4. entrevista */
+    var en=d.entrevista;
+    h+='<details class="sec"'+(en?' open':'')+'><summary>Entrevista y capítulos</summary><div class="in">'
+      +'<label class="chk"><input type="checkbox" data-act="toggleEnt"'+(en?' checked':'')+'> Este mes tiene entrevista en vídeo</label>';
+    if(en){
+      h+='<div class="row c2" style="margin-top:12px">'+fld('Etiqueta superior','entrevista.kicker',{ph:'Entrevista · Madridmarket.es'})+fld('Título','entrevista.titulo',{})+'</div>'
+        +'<div class="row">'+fld('Subtítulo','entrevista.subtitulo',{})+'</div>'
+        +'<div class="row c4">'+fld('Entrevistador','entrevista.entrevistador',{})+fld('Medio','entrevista.medio',{})+fld('Invitada/o','entrevista.invitada',{})+fld('Detalle de la invitada/o','entrevista.invitadaDetalle',{})+'</div>'
+        +'<div class="row c2">'+fld('Duración (texto)','entrevista.duracion',{ph:'18 min'})+fld('Duración del resumen','entrevista.duracionResumen',{ph:'4 min'})+'</div>'
+        +'<div class="row c3">'
+        +vidField('Vídeo completo','entrevista.videoCompleto','videos')+vidField('Vídeo resumen (opcional)','entrevista.videoResumen','videos')+vidField('Imagen de portada del vídeo','entrevista.poster','videos')
+        +'</div>'
+        +fld('Capítulos (uno por línea:  m:ss | título | descripción)','entrevista.capitulos',{area:true,kind:'caps',mono:true,rows:12,fmt:capsToText,hint:'Al pulsar un capítulo el vídeo salta a ese minuto. El minuto puede ser 3:28 o 1:02:15.'})
+        +fld('Extras de la entrevista (JSON: destacados, cita, pasos, historia, aviso)','entrevista.extra',{area:true,kind:'json',mono:true,rows:12,fmt:function(v){return JSON.stringify(v||{},null,2)}});
+    }
+    h+='</div></details>';
+
+    /* acciones */
+    h+='<div class="actions"><button class="btn p" data-act="guardar" type="button">💾 Guardar</button>'
+      +'<a class="btn" href="/'+d.anio+'-'+pad(d.mes)+'" target="_blank" rel="noopener" style="text-decoration:none">Vista previa ↗</a>'
+      +'<button class="btn" data-act="exportar" type="button">Descargar JSON</button>'
+      +'<span style="flex:1"></span><button class="btn d" data-act="borrar" type="button">Borrar este mes</button></div>';
+    $('editor').innerHTML=h;
+  }
+  function vidField(label,p,tipo){
+    return '<div><label>'+esc(label)+'</label><input data-p="'+p+'" list="dl-vn" value="'+esc(getP(DOC,p))+'" placeholder="nombre-del-archivo.mp4">'
+      +'<div style="margin-top:6px"><button type="button" class="btn s" data-act="subir" data-p="'+p+'" data-tipo="'+tipo+'" data-solo="nombre">Subir archivo…</button></div><div class="bar-up" hidden><i></i></div></div>';
+  }
+  function evHtml(e,i){
+    var p='eventos.'+i+'.';
+    return '<div class="ev"><h4><span>Evento '+(i+1)+': '+esc(e.titulo||'(sin título)')+'</span>'
+      +'<button class="btn s" type="button" data-act="evUp" data-i="'+i+'">↑</button><button class="btn s" type="button" data-act="evDown" data-i="'+i+'">↓</button>'
+      +'<button class="btn s d" type="button" data-act="evDel" data-i="'+i+'">Quitar</button></h4>'
+      +'<div class="row c3">'+fld('Inicio',p+'inicio',{type:'datetime-local'})+fld('Fin',p+'fin',{type:'datetime-local'})+fld('Etiqueta',p+'etiqueta',{ph:'Encuentro, Sonoterapia…'})+'</div>'
+      +'<div class="row">'+fld('Título',p+'titulo',{})+'</div>'
+      +'<div class="row">'+fld('Descripción (admite <b>negrita</b>)',p+'descripcion',{area:true,rows:4})+'</div>'
+      +'<div class="row c2">'+fld('Detalles (uno por línea: horario, lugar, precio…)',p+'detalles',{area:true,kind:'lines',rows:4,fmt:lines,hint:'Puedes empezar con un emoji (🕘 📍 💶) y usar <b>negrita</b>.'})+fld('Nota al pie cuando ya ha pasado (opcional)',p+'notaPasado',{area:true,rows:4})+'</div>'
+      +'<label>Botones</label>'+(e.botones||[]).map(function(b,j){return btHtml(i,j,b)}).join('')
+      +'<button class="btn s" type="button" data-act="addBt" data-i="'+i+'">+ Añadir botón</button></div>';
+  }
+  function btHtml(i,j,b){
+    var p='eventos.'+i+'.botones.'+j+'.';
+    var sel=function(f,opts,cur){return '<select data-p="'+p+f+'" data-rerender="'+(f==='tipo'?1:'')+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+(cur===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'};
+    var tipo=b.tipo||'link',valor;
+    if(tipo==='capitulo')valor='<div><label>Minuto (m:ss) de la entrevista</label><input data-p="'+p+'t" data-kind="time" value="'+esc(fmtT(b.t))+'"></div>';
+    else{
+      var dl=tipo==='video'?'dl-vid':tipo==='imagen'?'dl-fly':'';
+      valor='<div><label>'+(tipo==='link'?'Enlace (https://…)':'Archivo')+'</label><input data-p="'+p+'url"'+(dl?' list="'+dl+'"':'')+' value="'+esc(b.url)+'"'+(tipo==='link'?' placeholder="https://wa.me/34…"':'')+'>'
+        +(tipo==='video'?'<input data-p="'+p+'poster" list="dl-vid" value="'+esc(b.poster)+'" placeholder="Imagen de portada (opcional)" style="margin-top:4px">':'')
+        +(tipo==='imagen'?'<input data-p="'+p+'alt" value="'+esc(b.alt)+'" placeholder="Descripción de la imagen" style="margin-top:4px">':'')
+        +(tipo!=='link'?'<div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-p="'+p+'url" data-tipo="'+(tipo==='video'?'videos':'flyers')+'">Subir archivo…</button></div><div class="bar-up" hidden><i></i></div>':'')+'</div>';
+    }
+    return '<div class="bt"><div><label>Tipo</label>'+sel('tipo',[['link','Enlace'],['video','Vídeo'],['imagen','Cartel/imagen'],['capitulo','Ir a capítulo']],tipo)+'</div>'
+      +'<div><label>Texto del botón</label><input data-p="'+p+'texto" value="'+esc(b.texto)+'"></div>'+valor
+      +'<div><label>Estilo</label>'+sel('estilo',[['g','Normal'],['p','Destacado']],b.estilo||'g')+'</div>'
+      +'<div><label>Se ve</label>'+sel('cuando',[['siempre','Siempre'],['vivo','Antes del evento'],['pasado','Después del evento']],b.cuando||'siempre')+'</div>'
+      +'<div><button class="btn s d" type="button" data-act="btDel" data-i="'+i+'" data-j="'+j+'">✕</button></div></div>';
+  }
+
+  /* ---------- edición ---------- */
+  function marcarSucio(){SUCIO=true}
+  function onField(el){
+    var kind=el.dataset.kind,p=el.dataset.p;
+    if(kind==='dia'){
+      var s=DOC.diasClase||[],n=+el.dataset.n,i=s.indexOf(n);
+      if(el.checked&&i<0)s.push(n);if(!el.checked&&i>=0)s.splice(i,1);DOC.diasClase=s;marcarSucio();return;
+    }
+    if(!p)return;
+    var v;
+    if(kind==='bool')v=el.checked;
+    else if(kind==='lines')v=el.value.split('\n').map(function(x){return x.trim()}).filter(Boolean);
+    else if(kind==='caps'){try{v=textToCaps(el.value);el.classList.remove('bad')}catch(e){el.classList.add('bad');toast(e.message,true);return}}
+    else if(kind==='json'){
+      if(!el.value.trim())v=(p==='rutina')?null:{};
+      else try{v=JSON.parse(el.value);el.classList.remove('bad')}catch(e){el.classList.add('bad');toast('JSON no válido: '+e.message,true);return}
+    }
+    else if(kind==='time'){v=parseT(el.value);if(isNaN(v)){el.classList.add('bad');return}el.classList.remove('bad')}
+    else v=el.value;
+    setP(DOC,p,v);marcarSucio();
+    if(el.dataset.rerender){pintar()}
+  }
+  $('editor').addEventListener('input',function(e){if(e.target.matches('input,textarea,select')&&!e.target.dataset.rerender)onField(e.target)});
+  $('editor').addEventListener('change',function(e){if(e.target.matches('input,textarea,select'))onField(e.target)});
+
+  $('editor').addEventListener('click',function(e){
+    var b=e.target.closest('[data-act]');if(!b)return;
+    var act=b.dataset.act,i=+b.dataset.i,j=+b.dataset.j,ev=DOC&&DOC.eventos;
+    if(act==='addEv'){
+      var ult=ev[ev.length-1],base=ult?ult.inicio.slice(0,10):DOC.anio+'-'+pad(DOC.mes)+'-01';
+      ev.push({orden:ev.length,inicio:base+'T18:00',fin:base+'T20:00',etiqueta:'',titulo:'Nuevo evento',descripcion:'',detalles:[],botones:[],notaPasado:''});marcarSucio();pintar();
+    }
+    else if(act==='evDel'){if(confirm('¿Quitar este evento?')){ev.splice(i,1);marcarSucio();pintar()}}
+    else if(act==='evUp'&&i>0){var t=ev[i];ev[i]=ev[i-1];ev[i-1]=t;marcarSucio();pintar()}
+    else if(act==='evDown'&&i<ev.length-1){var t2=ev[i];ev[i]=ev[i+1];ev[i+1]=t2;marcarSucio();pintar()}
+    else if(act==='addBt'){ev[i].botones=ev[i].botones||[];ev[i].botones.push({tipo:'link',texto:'Más información',url:'https://',estilo:'g',cuando:'siempre'});marcarSucio();pintar()}
+    else if(act==='btDel'){ev[i].botones.splice(j,1);marcarSucio();pintar()}
+    else if(act==='toggleEnt'){
+      if(b.checked)DOC.entrevista={kicker:'Entrevista',titulo:'',subtitulo:'',entrevistador:'',medio:'',invitada:'',invitadaDetalle:'',duracion:'',duracionResumen:'',videoCompleto:'',videoResumen:'',poster:'',capitulos:[],extra:{}};
+      else if(confirm('Se quitará la entrevista de este mes al guardar. ¿Seguro?'))DOC.entrevista=null;
+      else{b.checked=true;return}
+      marcarSucio();pintar();
+    }
+    else if(act==='guardar')guardar();
+    else if(act==='exportar'){
+      var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(DOC,null,2)],{type:'application/json'}));
+      a.download=DOC.anio+'-'+pad(DOC.mes)+'.json';a.click();
+    }
+    else if(act==='borrar'){
+      if(!confirm('¿Borrar '+MESES[DOC.mes-1]+' '+DOC.anio+' de la base de datos? Los archivos de vídeo y carteles NO se borran.'))return;
+      api('DELETE','/api/admin/mes/'+DOC.anio+'/'+DOC.mes).then(function(){toast('Mes borrado');DOC=null;SUCIO=false;pintar();cargarLista()}).catch(function(er){toast(er.message,true)});
+    }
+    else if(act==='subir')subir(b);
+  });
+
+  function guardar(){
+    var doc=JSON.parse(JSON.stringify(DOC));
+    (doc.eventos||[]).forEach(function(ev,i){ev.orden=i});
+    api('POST','/api/admin/mes',doc).then(function(){SUCIO=false;toast('Guardado ✔  Ya está en la web.');cargarLista();return cargarMedios()}).catch(function(e){toast(e.message,true)});
+  }
+  window.addEventListener('beforeunload',function(e){if(SUCIO){e.preventDefault();e.returnValue=''}});
+
+  /* ---------- subida de archivos (al sistema de ficheros compartido) ---------- */
+  function subir(btn){
+    var inp=document.createElement('input');inp.type='file';
+    inp.accept=btn.dataset.tipo==='videos'?'video/mp4,video/webm,image/jpeg,image/png,image/webp':'image/jpeg,image/png,image/webp,application/pdf';
+    inp.onchange=function(){
+      var f=inp.files[0];if(!f)return;
+      var nombre=f.name.normalize('NFC').replace(/[^\w.\-]+/g,'_');
+      var tipo=btn.dataset.tipo;
+      if(/\.(jpe?g|png|webp)$/i.test(nombre)&&tipo==='videos'&&btn.dataset.solo!=='nombre'){/* imágenes de portada de vídeo van a videos/ */}
+      var cont=btn.parentNode.nextElementSibling,barra=cont&&cont.classList.contains('bar-up')?cont:null;
+      if(barra){barra.hidden=false;barra.firstChild.style.width='0'}
+      var x=new XMLHttpRequest();
+      x.open('POST','/api/admin/subir?tipo='+tipo+'&nombre='+encodeURIComponent(nombre));
+      x.withCredentials=true;
+      x.upload.onprogress=function(e){if(e.lengthComputable&&barra)barra.firstChild.style.width=(e.loaded/e.total*100)+'%'};
+      x.onload=function(){
+        var j={};try{j=JSON.parse(x.responseText)}catch(e){}
+        if(x.status===200){
+          setP(DOC,btn.dataset.p,btn.dataset.solo==='nombre'?j.nombre:j.url);marcarSucio();toast('Subido: '+j.nombre+' ('+Math.round(j.bytes/1048576*10)/10+' MB)');
+          cargarMedios().then(pintar);
+        }else{
+          if(x.status===409&&confirm('Ya existe "'+nombre+'" en el servidor.\n\n¿Usar ese archivo que ya está subido (Aceptar) o cancelar para cambiar el nombre?')){
+            setP(DOC,btn.dataset.p,btn.dataset.solo==='nombre'?nombre:'/'+tipo+'/'+nombre);marcarSucio();pintar();
+          }else toast(j.error||('Error '+x.status),true);
+          if(barra)barra.hidden=true;
+        }
+      };
+      x.onerror=function(){toast('Fallo de red subiendo el archivo',true);if(barra)barra.hidden=true};
+      x.send(f);
+    };
+    inp.click();
+  }
+
+  arrancar();
+})();
+</script>
+</body>
+</html>

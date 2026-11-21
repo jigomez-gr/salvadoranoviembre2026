@@ -64,3 +64,39 @@ scp media-nuevos/videos/* USUARIO@HOST:/var/data/salvadora/media/videos/
 
 ## Probar en local antes
 Doble clic en `iniciar-local.bat` (necesita Node 20 o superior) → http://localhost:3100. Usa los medios reales de `D:\tmp\antigraviti\salvadora\media_base` y los nuevos de `media-nuevos\`.
+
+---
+
+## Meses, histórico y panel de administración (v2)
+
+La página ya no tiene el contenido escrito a mano: **cada mes vive en Postgres** (esquema propio `actividades`
+dentro de `crm_salvadora`; 4 tablas: `mes`, `evento`, `entrevista`, `capitulo`; no toca ninguna tabla de la
+landing ni del CRM). Los vídeos y carteles siguen en el sistema de ficheros compartido; en la base solo se guarda su nombre.
+
+### Variable nueva en Dokploy (Environment)
+
+| Variable | Valor |
+|---|---|
+| `ADMIN_PASSWORD` | una contraseña larga (sin ella, `/admin` queda desactivado) |
+| `MAX_UPLOAD_MB` | opcional, 800 por defecto |
+
+Después: **Deploy**. Al arrancar crea las tablas y, si están vacías, carga noviembre 2026 desde `seed/2026-11.json`.
+Comprobación: `https://salvadoranov2026.jigretera.com/api/estado` → `"actividades": "esquema \"actividades\" listo"`.
+
+### Cómo se usa cada mes
+
+1. Entra en `https://salvadoranov2026.jigretera.com/admin`.
+2. **+ Nuevo mes** (p. ej. `2026-12`): puede copiar las clases habituales del mes anterior. Nace como *borrador*.
+3. Añade eventos, sube flyers/vídeos con **Subir archivo…** (van a `/var/data/salvadora/media/flyers|videos`) y escribe los capítulos.
+4. Marca **Publicado** y **Guardar**. La web (`/`) muestra siempre el mes en curso; el selector y el **Histórico** dan acceso a los demás (`/AAAA-MM`).
+
+Notas de seguridad:
+- La subida **nunca pisa** un archivo existente (la carpeta de medios es la misma que usa la landing).
+- Solo acepta mp4, webm, jpg, png, webp y pdf. Sesión de 12 h, bloqueo tras varios intentos fallidos.
+- El contenedor corre como root para poder escribir en el volumen compartido.
+- Borrar un mes en el panel **no** borra sus archivos del disco.
+
+### Importar/exportar
+
+En el panel: **Descargar JSON** (un mes entero) e **Importar JSON…**. Sirve para que un agente prepare el mes siguiente:
+basta con copiar `seed/2026-11.json`, cambiar el contenido y cargarlo en `/admin`.
