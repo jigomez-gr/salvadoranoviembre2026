@@ -218,6 +218,10 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 .hist a.hm span{display:block;color:var(--soft);font-size:.85rem;margin-top:6px}
 .hist a.hm i{font-style:normal;display:inline-block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--gold);border-radius:999px;padding:2px 10px;margin-top:8px}
 .vacio{color:var(--soft);font-style:italic}
+.msg-prio{border:1px solid rgba(197,160,89,.55);background:linear-gradient(135deg,rgba(197,160,89,.14),rgba(143,29,58,.18));border-radius:18px;padding:22px 26px;margin-bottom:18px}
+.msg-prio b.t{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--gold);margin-bottom:6px}
+.msg-prio p{margin:0 0 12px;color:var(--ink)}
+.msg-prio .btns{margin:0}
 
 </style>
 </head>
@@ -488,7 +492,9 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
         +(bt?'<div class="btns">'+bt+'</div>':'')
         +(e.notaPasado?'<p class="note-past">'+esc(e.notaPasado)+'</p>':'')
         +'</div></article>';
-    }).join('')||'<p class="vacio">Este mes no tiene actividades especiales; las clases habituales continúan.</p>';
+    }).join('');
+    var msg=d.mensaje?'<div class="msg-prio rv"><b class="t">Reservas prioritarias abiertas</b><p>'+d.mensaje+'</p><div class="btns"><a class="btn btn--p btn--s" href="https://wa.me/34646034231?text='+encodeURIComponent('Hola, quiero una reserva prioritaria para las actividades de '+mesN)+'" target="_blank" rel="noopener">Reservar por WhatsApp</a></div></div>':'';
+    $('events').innerHTML=msg+($('events').innerHTML||(d.mensaje?'':'<p class="vacio">Este mes no tiene actividades especiales; las clases habituales continúan.</p>'));
     var evInfo={};
     document.querySelectorAll('#events .ev[data-end]').forEach(function(el){
       var s=when(el.dataset.start),e=when(el.dataset.end),st=el.querySelector('.state'),past=NOW>e,same=NOW.toDateString()===s.toDateString();

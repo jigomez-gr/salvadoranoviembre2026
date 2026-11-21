@@ -222,6 +222,7 @@ header.bar h1{font-size:1.5rem;flex:1}
     h+='<details class="sec" open><summary>Datos del mes</summary><div class="in">'
       +'<div class="row c2">'+fld('Título de la página','titulo',{hint:'Aparece en la portada y en el histórico.'})+fld('Texto de presentación (portada)','lead',{area:true,rows:3})+'</div>'
       +'<div class="row">'+fld('Frase bajo el calendario (opcional)','subtituloCalendario',{})+'</div>'
+      +'<div class="row">'+fld('Aviso destacado (opcional)','mensaje',{area:true,rows:3,hint:'Para meses sin fechas cerradas. Ej.: «Ya se aceptan reservas prioritarias. Comunicaremos la fecha en cuanto se confirme.» Sale en un recuadro dorado con botón de WhatsApp. Pueden convivir con eventos.'})+'</div>'
       +'<label>Días de clases habituales (se marcan en el calendario)</label><div style="display:flex;flex-wrap:wrap;gap:6px 0;margin-bottom:12px">'
       +[1,2,3,4,5,6,0].map(function(n){return '<span class="chk"><input type="checkbox" data-kind="dia" data-n="'+n+'"'+((d.diasClase||[]).indexOf(n)>=0?' checked':'')+'> '+DIAS[n]+'</span>'}).join('')+'</div>'
       +'<label class="chk"><input type="checkbox" data-p="publicado" data-kind="bool"'+(d.publicado!==false?' checked':'')+'> Publicado (si lo desmarcas queda en borrador: solo lo ves tú aquí)</label>'
