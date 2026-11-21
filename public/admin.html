@@ -67,6 +67,10 @@ header.bar h1{font-size:1.5rem;flex:1}
 .bar-up{height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:4px}
 .bar-up i{display:block;height:100%;width:0;background:var(--gold)}
 .bad{border-color:var(--err)!important}
+@media(max-width:860px){.side{position:static}header.bar{flex-wrap:wrap;padding:12px 14px}header.bar h1{font-size:1.2rem;flex:1 1 100%}.layout{padding:14px}.sec>summary{padding:12px 14px}.sec .in{padding:4px 14px 14px}.actions .btn{flex:1 1 40%;text-align:center}}
+@media(max-width:560px){.bt{grid-template-columns:1fr}.ev>h4{flex-wrap:wrap}}
+@media(pointer:coarse){input,select,textarea{font-size:16px}.btn{min-height:42px}}
+@media(min-width:1800px){body{font-size:17px}.layout{max-width:1700px;grid-template-columns:300px 1fr}}
 </style>
 </head>
 <body>
@@ -231,7 +235,7 @@ header.bar h1{font-size:1.5rem;flex:1}
     /* 2. eventos */
     h+='<details class="sec" open><summary>Eventos y actividades ('+(d.eventos||[]).length+')</summary><div class="in">'
       +(d.eventos||[]).map(evHtml).join('')
-      +'<button class="btn s" type="button" data-act="addEv">+ Añadir evento</button></div></details>';
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" type="button" data-act="addEv">+ Añadir evento</button><button class="btn s" type="button" data-act="crm">⬇ Traer del CRM</button></div><div id="crmPanel"></div></div></details>';
 
     /* 3. rutina */
     h+='<details class="sec"><summary>Clases habituales ("Tu rutina de bienestar")</summary><div class="in">'
@@ -273,6 +277,8 @@ header.bar h1{font-size:1.5rem;flex:1}
       +'<button class="btn s" type="button" data-act="evUp" data-i="'+i+'">↑</button><button class="btn s" type="button" data-act="evDown" data-i="'+i+'">↓</button>'
       +'<button class="btn s d" type="button" data-act="evDel" data-i="'+i+'">Quitar</button></h4>'
       +'<div class="row c3">'+fld('Inicio',p+'inicio',{type:'datetime-local'})+fld('Fin',p+'fin',{type:'datetime-local'})+fld('Etiqueta',p+'etiqueta',{ph:'Encuentro, Sonoterapia…'})+'</div>'
+      +'<label class="chk"><input type="checkbox" data-p="'+p+'sinFecha" data-kind="bool"'+(e.sinFecha?' checked':'')+' data-rerender-ck="1"> Fecha por confirmar (no se muestra fecha ni sale en el calendario)</label>'
+      +(e.sinFecha?'<div class="row" style="margin-top:8px">'+fld('Texto que sustituye a la fecha',p+'textoFecha',{ph:'Se comunicará con tiempo la fecha del nuevo evento'})+'</div>':'')
       +'<div class="row">'+fld('Título',p+'titulo',{})+'</div>'
       +'<div class="row">'+fld('Descripción (admite <b>negrita</b>)',p+'descripcion',{area:true,rows:4})+'</div>'
       +'<div class="row c2">'+fld('Detalles (uno por línea: horario, lugar, precio…)',p+'detalles',{area:true,kind:'lines',rows:4,fmt:lines,hint:'Puedes empezar con un emoji (🕘 📍 💶) y usar <b>negrita</b>.'})+fld('Nota al pie cuando ya ha pasado (opcional)',p+'notaPasado',{area:true,rows:4})+'</div>'
@@ -318,7 +324,7 @@ header.bar h1{font-size:1.5rem;flex:1}
     else if(kind==='time'){v=parseT(el.value);if(isNaN(v)){el.classList.add('bad');return}el.classList.remove('bad')}
     else v=el.value;
     setP(DOC,p,v);marcarSucio();
-    if(el.dataset.rerender){pintar()}
+    if(el.dataset.rerender||el.dataset.rerenderCk){pintar()}
   }
   $('editor').addEventListener('input',function(e){if(e.target.matches('input,textarea,select')&&!e.target.dataset.rerender)onField(e.target)});
   $('editor').addEventListener('change',function(e){if(e.target.matches('input,textarea,select'))onField(e.target)});
@@ -341,6 +347,8 @@ header.bar h1{font-size:1.5rem;flex:1}
       else{b.checked=true;return}
       marcarSucio();pintar();
     }
+    else if(act==='crm')abrirCrm();
+    else if(act==='crmAdd')anadirCrm();
     else if(act==='guardar')guardar();
     else if(act==='exportar'){
       var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(DOC,null,2)],{type:'application/json'}));
@@ -352,6 +360,32 @@ header.bar h1{font-size:1.5rem;flex:1}
     }
     else if(act==='subir')subir(b);
   });
+
+  var CRM=[];
+  function abrirCrm(){
+    var box=$('crmPanel');box.innerHTML='<p class="hint">Leyendo el CRM…</p>';
+    api('GET','/api/admin/crm/servicios').then(function(d){
+      CRM=d.servicios||[];
+      var ya={};(DOC.eventos||[]).forEach(function(e){if(e.crmId)ya[e.crmId]=1});
+      var pref=DOC.anio+'-'+pad(DOC.mes);
+      box.innerHTML='<div class="ev" style="margin-top:12px"><h4><span>Servicios activos del CRM ('+CRM.length+')</span><button class="btn s" type="button" data-act="crmAdd">Añadir los marcados</button></h4>'
+        +'<p class="hint">Se copian como borrador: puedes retocar textos y botones. El CRM no se modifica. Los ya traídos aparecen desmarcados.</p>'
+        +CRM.map(function(s,i){
+          var enMes=!s._recurrente&&(s.sinFecha||(s.inicio||'').indexOf(pref)===0);
+          var cuando=s._recurrente?'clase habitual':s.sinFecha?('fecha por confirmar'+(s.textoFecha?': '+esc(s.textoFecha):'')):esc((s.inicio||'').replace('T',' '));
+          return '<label class="chk" style="display:flex;margin:6px 0"><input type="checkbox" data-crm="'+i+'"'+(enMes&&!ya[s.crmId]?' checked':'')+'> <span><b>'+esc(s.titulo)+'</b> <small style="color:var(--soft)">· '+cuando+(ya[s.crmId]?' · ya añadido':'')+'</small></span></label>';
+        }).join('')+'</div>';
+    }).catch(function(e){box.innerHTML='<p class="err">'+esc(e.message)+'</p>'});
+  }
+  function anadirCrm(){
+    var n=0;
+    document.querySelectorAll('#crmPanel [data-crm]:checked').forEach(function(c){
+      var s=JSON.parse(JSON.stringify(CRM[+c.dataset.crm]));delete s._recurrente;delete s._activo;
+      if(!s.sinFecha&&!s.inicio)s.sinFecha=true;
+      s.orden=(DOC.eventos||[]).length;DOC.eventos.push(s);n++;
+    });
+    if(n){marcarSucio();pintar();toast(n+' evento(s) añadidos. Revísalos y pulsa Guardar.')}else toast('No hay ninguno marcado',true);
+  }
 
   function guardar(){
     var doc=JSON.parse(JSON.stringify(DOC));

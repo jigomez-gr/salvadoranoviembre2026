@@ -150,7 +150,7 @@ h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;
 .now p{margin:0;color:#e4eae5;font-size:.93rem}
 
 .chap{list-style:none;margin:0;padding:0 6px 0 0;display:grid;gap:8px;max-height:640px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--lotus) transparent}
-@media (max-width:960px){.chap{max-height:none}}
+@media (max-width:960px){.chap{max-height:min(520px,70vh)}}
 .chap button{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;position:relative;overflow:hidden;padding:12px 14px 12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);transition:background .2s,border-color .2s}
 .chap button:hover,.chap button:focus-visible{background:rgba(255,255,255,.1)}
 .chap .row{display:flex;gap:12px;align-items:baseline;position:relative;z-index:1}
@@ -223,6 +223,15 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 .msg-prio p{margin:0 0 12px;color:var(--ink)}
 .msg-prio .btns{margin:0}
 
+
+/* ---------- pantallas grandes (portátil ancho, PC, TV): más ancho y letra mayor ---------- */
+@media (min-width:1600px){body{font-size:19px}.wrap{width:min(1400px,86vw)}.cal{top:96px}}
+@media (min-width:2200px){body{font-size:23px}.wrap{width:min(1900px,82vw)}.chap{max-height:820px}.monthbar button,.monthbar select,.monthbar a{font-size:1rem}}
+@media (min-width:3200px){body{font-size:30px}.wrap{width:min(2500px,80vw)}}
+/* ---------- móviles pequeños y táctiles ---------- */
+@media (max-width:420px){.monthbar .wrap{gap:8px}.monthbar select{min-width:0;flex:1 1 100%}.monthbar button{flex:1}.monthbar .mh{flex:1 1 100%;text-align:center}.hero .wrap{padding:64px 0 40px}.btns .btn{width:100%;text-align:center}}
+@media (pointer:coarse){.btn,.chap button,.monthbar button,.monthbar a,.monthbar select{min-height:44px}.cal__d{min-height:40px}}
+@media (max-width:760px){.nav .back{padding:7px 12px;font-size:.85rem}.brand span{font-size:.82rem}}
 </style>
 </head>
 <body>
@@ -454,7 +463,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
     $('hTitle').innerHTML=t.replace(new RegExp(r,'i'),function(x){return '<em>'+x+'</em>'});
     $('hLead').textContent=d.lead||'';$('hLead').hidden=!d.lead;
     var ev=d.eventos||[];
-    $('hChips').innerHTML=ev.map(function(e){var s=when(e.inicio);return '<li><b>'+s.getDate()+'</b> '+esc(e.titulo)+'</li>'}).join('')+(d.rutina?'<li><b>Todo el mes</b> Yoga y meditación</li>':'');
+    $('hChips').innerHTML=ev.map(function(e){return '<li><b>'+(e.sinFecha?'Próx.':when(e.inicio).getDate())+'</b> '+esc(e.titulo)+'</li>'}).join('')+(d.rutina?'<li><b>Todo el mes</b> Yoga y meditación</li>':'');
     var poster=null;
     ev.forEach(function(e){(e.botones||[]).forEach(function(b){if(!poster&&b.poster)poster=b.poster})});
     if(!poster&&d.entrevista&&d.entrevista.poster)poster='/videos/'+d.entrevista.poster;
@@ -468,7 +477,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
     var pasado=NOW>finMes,futuro=NOW<inicioMes;
     $('cKicker').textContent=mesN.charAt(0).toUpperCase()+mesN.slice(1)+' de un vistazo';
     $('cH2').textContent=pasado?'Así fue el mes':futuro?'Lo que viene este mes':'Lo que ha pasado y lo que viene';
-    $('cSub').textContent=d.subtituloCalendario||(pasado?'Archivo de este mes: carteles, vídeos y entrevista tal y como se vivieron.':'Guardamos aquí todo el mes, también lo ya celebrado.');
+    $('cSub').textContent=d.subtituloCalendario||(pasado?'Archivo de este mes: carteles, vídeos y entrevista tal y como se vivieron.':futuro?'Iremos publicando aquí las fechas en cuanto se confirmen.':'Guardamos aquí todo el mes, también lo ya celebrado.');
     $('calH3').textContent=mesN.charAt(0).toUpperCase()+mesN.slice(1)+' '+Y;
     $('calBox').setAttribute('aria-label','Calendario de '+mesN+' de '+Y);
     var cls=(d.diasClase||[]);
@@ -476,7 +485,8 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
       +(cls.length?'<span><i style="background:var(--gold)"></i>Clases ('+cls.map(function(n){return DIAS_C[n]}).join(' · ')+')</span>':'');
     var hasEntrevista=!!d.entrevista;
     $('events').innerHTML=ev.map(function(e,n){
-      var s=when(e.inicio),dow=DIAS[s.getDay()];
+      var s=when(e.inicio),dow=DIAS[s.getDay()],sf=!!e.sinFecha;
+      var det=(e.detalles||[]).slice();if(sf&&e.textoFecha)det.unshift('🗓 <b>'+esc(e.textoFecha)+'</b>');
       var bt=(e.botones||[]).filter(function(b){return b.tipo!=='capitulo'||hasEntrevista}).map(function(b){
         var cls='btn btn--'+(b.estilo==='p'?'p':'g')+' btn--s'+(b.cuando==='vivo'?' cta-live':b.cuando==='pasado'?' cta-past':'');
         if(b.tipo==='link')return '<a class="'+cls+'" href="'+esc(b.url)+'" target="_blank" rel="noopener">'+esc(b.texto)+'</a>';
@@ -484,11 +494,12 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
         if(b.tipo==='imagen')return '<button class="'+cls+'" data-img="'+esc(b.url)+'" data-alt="'+esc(b.alt||'')+'" type="button">'+esc(b.texto)+'</button>';
         return '<button class="'+cls+'" data-t="'+(+b.t||0)+'" type="button">'+esc(b.texto)+'</button>';
       }).join('');
-      return '<article class="ev rv" id="ev-'+n+'" data-start="'+esc(e.inicio)+'" data-end="'+esc(e.fin)+'">'
-        +'<div class="ev__date"><span class="dow">'+dow+'</span><span class="day">'+s.getDate()+'</span><span class="mon">'+mesN.charAt(0).toUpperCase()+mesN.slice(1)+'</span></div>'
-        +'<div class="ev__body"><div class="ev__top"><span class="tag">'+esc(e.etiqueta||'Actividad')+'</span><span class="state"></span></div>'
+      return '<article class="ev rv'+(sf?' sf':'')+'" id="ev-'+n+'"'+(sf?'':' data-start="'+esc(e.inicio)+'" data-end="'+esc(e.fin)+'"')+'>'
+        +(sf?'<div class="ev__date"><span class="dow">Próximamente</span><span class="day" style="font-size:2.2rem">···</span><span class="mon">Fecha por confirmar</span></div>'
+            :'<div class="ev__date"><span class="dow">'+dow+'</span><span class="day">'+s.getDate()+'</span><span class="mon">'+mesN.charAt(0).toUpperCase()+mesN.slice(1)+'</span></div>')
+        +'<div class="ev__body"><div class="ev__top"><span class="tag">'+esc(e.etiqueta||'Actividad')+'</span><span class="state">'+(sf?'Fecha por confirmar':'')+'</span></div>'
         +'<h3>'+esc(e.titulo)+'</h3>'+(e.descripcion?'<p>'+e.descripcion+'</p>':'')
-        +((e.detalles||[]).length?'<ul class="meta">'+e.detalles.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')
+        +(det.length?'<ul class="meta">'+det.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')
         +(bt?'<div class="btns">'+bt+'</div>':'')
         +(e.notaPasado?'<p class="note-past">'+esc(e.notaPasado)+'</p>':'')
         +'</div></article>';

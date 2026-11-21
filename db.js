@@ -68,6 +68,9 @@ CREATE TABLE IF NOT EXISTS ${S}.capitulo (
   descripcion text
 );
 ALTER TABLE ${S}.mes ADD COLUMN IF NOT EXISTS mensaje text;
+ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS sin_fecha boolean NOT NULL DEFAULT false;
+ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS texto_fecha text;
+ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS crm_id text;
 CREATE INDEX IF NOT EXISTS evento_mes_idx ON ${S}.evento(mes_id);
 CREATE INDEX IF NOT EXISTS capitulo_ent_idx ON ${S}.capitulo(entrevista_id);
 `;
@@ -123,12 +126,20 @@ function normalizarMes(doc) {
   if (evs.length > 60) throw new Error('Demasiados eventos');
   evs.forEach((e, i) => {
     if (!e || typeof e !== 'object') return;
-    if (!RE_FECHA.test(e.inicio || '')) throw new Error(`Evento ${i + 1}: fecha de inicio no válida (AAAA-MM-DDThh:mm)`);
-    const fin = RE_FECHA.test(e.fin || '') ? e.fin : e.inicio;
+    const sinFecha = e.sinFecha === true;
+    let inicio = e.inicio, fin = e.fin;
+    if (!RE_FECHA.test(inicio || '')) {
+      if (!sinFecha) throw new Error(`Evento ${i + 1}: fecha de inicio no válida (AAAA-MM-DDThh:mm)`);
+      // sin fecha: se guarda al final del mes como marcador; la web no muestra esa fecha
+      const ult = new Date(anio, mes, 0).getDate();
+      inicio = `${anio}-${String(mes).padStart(2, '0')}-${String(ult).padStart(2, '0')}T00:00`;
+      fin = inicio.replace('T00:00', 'T23:59');
+    }
+    if (!RE_FECHA.test(fin || '')) fin = inicio;
     if (!str(e.titulo, 300)) throw new Error(`Evento ${i + 1}: falta el título`);
     out.eventos.push({
       orden: num(e.orden, i),
-      inicio: e.inicio, fin,
+      inicio, fin, sinFecha, textoFecha: str(e.textoFecha, 300), crmId: str(e.crmId, 80),
       etiqueta: str(e.etiqueta, 80),
       titulo: str(e.titulo, 300),
       descripcion: html(e.descripcion, 6000),
@@ -220,8 +231,8 @@ function create(pool) {
     if (!m || (!m.publicado && !admin)) return null;
     const evs = (await pool.query(
       `SELECT orden, to_char(fecha_inicio,'YYYY-MM-DD"T"HH24:MI') AS inicio, to_char(fecha_fin,'YYYY-MM-DD"T"HH24:MI') AS fin,
-              etiqueta, titulo, descripcion, detalles, botones, nota_pasado
-         FROM ${S}.evento WHERE mes_id = $1 ORDER BY fecha_inicio, orden, id`, [m.id])).rows;
+              etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id
+         FROM ${S}.evento WHERE mes_id = $1 ORDER BY sin_fecha, fecha_inicio, orden, id`, [m.id])).rows;
     const en = (await pool.query(`SELECT * FROM ${S}.entrevista WHERE mes_id = $1`, [m.id])).rows[0];
     let entrevista = null;
     if (en) {
@@ -239,6 +250,7 @@ function create(pool) {
       eventos: evs.map((e) => ({
         orden: e.orden, inicio: e.inicio, fin: e.fin, etiqueta: e.etiqueta, titulo: e.titulo, descripcion: e.descripcion,
         detalles: e.detalles, botones: e.botones, notaPasado: e.nota_pasado,
+        sinFecha: e.sin_fecha, textoFecha: e.texto_fecha, crmId: e.crm_id,
       })),
       entrevista,
     };
@@ -262,10 +274,10 @@ function create(pool) {
       await c.query(`DELETE FROM ${S}.entrevista WHERE mes_id = $1`, [m.id]);
       for (const e of d.eventos) {
         await c.query(
-          `INSERT INTO ${S}.evento (mes_id, orden, fecha_inicio, fecha_fin, etiqueta, titulo, descripcion, detalles, botones, nota_pasado)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+          `INSERT INTO ${S}.evento (mes_id, orden, fecha_inicio, fecha_fin, etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
           [m.id, e.orden, e.inicio.replace('T', ' '), e.fin.replace('T', ' '), e.etiqueta, e.titulo, e.descripcion,
-            JSON.stringify(e.detalles), JSON.stringify(e.botones), e.notaPasado]);
+            JSON.stringify(e.detalles), JSON.stringify(e.botones), e.notaPasado, e.sinFecha, e.textoFecha, e.crmId]);
       }
       if (d.entrevista) {
         const n = d.entrevista;
@@ -295,7 +307,68 @@ function create(pool) {
     return elegirActual(lista);
   }
 
-  return { iniciar, listarMeses, getMes, guardarMes, borrarMes, mesActual, normalizarMes, dbActiva, schema: SCHEMA };
+  /* ----- CRM (solo lectura): eventos de public.services ----- */
+  const fmtMadrid = (d) => {
+    if (!d) return null;
+    const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(d));
+    const g = (t) => p.find((x) => x.type === t).value;
+    return `${g('year')}-${g('month')}-${g('day')}T${g('hour')}:${g('minute')}`;
+  };
+  const escHtml = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const mediaUrl = (u) => {
+    if (!u) return null;
+    u = String(u).trim();
+    const m = /^https?:\/\/[^/]+(\/(?:flyers|videos)\/.+)$/i.exec(u);
+    if (m) return m[1];
+    return u.startsWith('/') ? u : null;
+  };
+  const hhmm = (s) => s.slice(11);
+  /** Convierte una fila de public.services en un borrador de evento. Tolera columnas que falten. */
+  function servicioAEvento(r) {
+    const flagCols = Object.keys(r).filter((k) => typeof r[k] === 'boolean' && /tbd|confirm|sinfecha|nodate|pendiente/i.test(k));
+    const flag = flagCols.some((k) => r[k] === true);
+    const ini = fmtMadrid(r.eventStartDate), fin = fmtMadrid(r.eventEndDate) || ini;
+    const sinFecha = flag || (!ini && r.serviceType !== 'recurring');
+    const detalles = [];
+    if (!sinFecha && ini) detalles.push(`🕘 <b>${hhmm(ini)}${fin && fin !== ini ? ' – ' + hhmm(fin) : ''} h</b>`);
+    if (r.address) detalles.push(`📍 ${escHtml(r.address)}`);
+    const precio = r.price != null ? Number(r.price) : 0;
+    if (precio > 0) detalles.push(`💶 <b>${String(precio).replace('.', ',').replace(/,00$/, '')} €</b>`);
+    const botones = [{ tipo: 'link', texto: 'Reservar por WhatsApp', url: 'https://wa.me/34646034231?text=' + encodeURIComponent('Hola, quiero reservar: ' + r.name), estilo: 'p', cuando: 'vivo' }];
+    const fly = mediaUrl(r.flyerParticularUrl) || mediaUrl(r.flyerUrl);
+    if (fly) botones.push({ tipo: 'imagen', texto: 'Ver el cartel', url: fly, alt: 'Cartel ' + r.name, estilo: 'g', cuando: 'siempre' });
+    const vid = mediaUrl(r.videoParticularUrl);
+    if (vid) botones.push({ tipo: 'video', texto: '▶ Ver el vídeo', url: vid, estilo: 'g', cuando: 'siempre' });
+    return {
+      crmId: String(r.id),
+      titulo: r.name, etiqueta: r.categoria || (r.serviceType === 'recurring' ? 'Clase' : 'Evento'),
+      descripcion: escHtml(r.description).replace(/\n+/g, '<br>'),
+      sinFecha, textoFecha: sinFecha ? (r.eventDatesText || null) : null,
+      inicio: ini || undefined, fin: fin || undefined,
+      detalles, botones,
+      _recurrente: r.serviceType === 'recurring', _activo: r.isActive !== false,
+    };
+  }
+  async function crmServicios() {
+    if (!dbActiva) throw new Error('No hay base de datos configurada');
+    let rows;
+    try {
+      rows = (await pool.query(`SELECT s.*, c.name AS categoria FROM public.services s LEFT JOIN public.service_categories c ON c.id = s."categoryId" ORDER BY s."displayOrder", s.name`)).rows;
+    } catch (e) {
+      rows = (await pool.query(`SELECT s.* FROM public.services s ORDER BY s.name`)).rows;
+    }
+    return rows.filter((r) => r.isActive !== false).map(servicioAEvento);
+  }
+  async function crmEsquema() {
+    if (!dbActiva) throw new Error('No hay base de datos configurada');
+    const { rows } = await pool.query(
+      `SELECT table_name, column_name, data_type FROM information_schema.columns
+        WHERE table_schema = 'public' AND (table_name IN ('services','service_categories') OR table_name ILIKE '%convoc%' OR table_name ILIKE '%edicion%')
+        ORDER BY table_name, ordinal_position`);
+    return rows;
+  }
+
+  return { crmServicios, crmEsquema, iniciar, listarMeses, getMes, guardarMes, borrarMes, mesActual, normalizarMes, dbActiva, schema: SCHEMA };
 }
 
 module.exports = { create, normalizarMes, elegirActual };

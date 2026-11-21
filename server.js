@@ -254,6 +254,14 @@ const server = http.createServer(async (req, res) => {
       }
       if (p === '/api/admin/estado') return jsonOut(res, 200, { ok: true, bd: db.dbActiva, escritura: db.dbActiva, mediaRoot: ROOT, maxUploadMB: MAX_UPLOAD / 1048576 });
       if (p === '/api/admin/meses') return jsonOut(res, 200, { meses: await db.listarMeses({ admin: true }) });
+      if (p === '/api/admin/crm/servicios') {
+        try { return jsonOut(res, 200, { servicios: await db.crmServicios() }); }
+        catch (e) { return jsonOut(res, 502, { error: 'No se pudo leer el CRM: ' + e.message }); }
+      }
+      if (p === '/api/admin/crm/esquema') {
+        try { return jsonOut(res, 200, { columnas: await db.crmEsquema() }); }
+        catch (e) { return jsonOut(res, 502, { error: e.message }); }
+      }
       if (p === '/api/admin/subir' && req.method === 'POST') return handleUpload(req, res, q);
       if (p === '/api/admin/medios') {
         const out = {};
