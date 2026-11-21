@@ -1,0 +1,7 @@
+.git
+node_modules
+media-nuevos
+*.md
+*.bat
+sql
+.env

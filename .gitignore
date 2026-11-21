@@ -1,0 +1,15 @@
+# Nada pesado en Git: los medios viven en la carpeta compartida (media_base)
+media-nuevos/
+*.mp4
+*.mov
+*.webm
+*.mp3
+*.zip
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.pdf
+node_modules/
+.env
+*.log
