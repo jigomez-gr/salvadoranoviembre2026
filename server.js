@@ -2,7 +2,7 @@
  * Minilanding "Actividades de noviembre 2026" · Centro de Yoga Salvadora Conesa
  *
  * Servidor Node sin framework. Sirve:
- *   - /                      → public/index.html (y el resto de public/)
+ *   - / y /servicios         → public/index.html (y el resto de public/)
  *   - /videos/*, /flyers/*,
  *     /documentos/*          → ficheros pesados desde la carpeta COMPARTIDA de medios
  *                              (la misma que usa la landing: media_base / /var/data/salvadora/media)
@@ -151,7 +151,7 @@ const server = http.createServer(async (req, res) => {
       return sendFile(req, res, r.file, r.mime, 'public, max-age=86400');
     }
 
-    const rel = p === '/' ? 'index.html' : p.replace(/^\/+/, '');
+    const rel = (p === '/' || p === '/servicios' || p === '/servicios/') ? 'index.html' : p.replace(/^\/+/, '');
     const f = safeJoin(PUBLIC, rel);
     if (f && exists(f)) return sendFile(req, res, f, null, rel.endsWith('.html') ? 'no-cache' : 'public, max-age=3600');
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('No encontrado');
