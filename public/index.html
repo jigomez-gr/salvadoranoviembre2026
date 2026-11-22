@@ -10,8 +10,8 @@
 <script src="/config.js"></script>
 <style>
 :root{
-  --bg:#1b0911; --bg2:#26101b; --ink:#f7f1e6; --soft:#d6c6c8;
-  --lotus:#8f1d3a; --lotus-l:#f0b9c6; --gold:#c5a059; --teal:#008a93;
+  --bg:#0f1a17; --bg2:#14231f; --ink:#f7f1e6; --soft:#d6c6c8;
+  --lotus:#c24f9b; --lotus-l:#e8a3d3; --gold:#c5a059; --teal:#008a93;
   --card:rgba(255,255,255,.055); --line:rgba(255,255,255,.13);
   --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif; --sans:"Outfit","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
 }
@@ -31,7 +31,7 @@ img,video{max-width:100%;display:block}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
 /* barra superior */
-.top{position:sticky;top:0;z-index:30;background:rgba(27,9,17,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:30;background:rgba(15,26,23,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--serif);line-height:1.15}
 .brand img{width:42px;height:auto}
@@ -46,14 +46,14 @@ img,video{max-width:100%;display:block}
 /* portada */
 .hero{position:relative;min-height:80vh;display:grid;align-items:end;overflow:hidden;isolation:isolate}
 .hero__bg{position:absolute;inset:-4% 0;background:url(/videos/Promo_Bienestar-Experience-2026_1920x1080-poster.jpg) center/cover;z-index:-2;will-change:transform}
-.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(27,9,17,.55) 0%,rgba(27,9,17,.78) 50%,var(--bg) 100%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(15,26,23,.55) 0%,rgba(15,26,23,.78) 50%,var(--bg) 100%)}
 .hero .wrap{padding:90px 0 56px}
 .kicker{letter-spacing:.2em;text-transform:uppercase;font-size:.76rem;color:var(--gold);font-weight:600;margin:0 0 14px}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.4rem,7vw,5rem);line-height:1.03;margin:0 0 18px;max-width:14ch}
 .hero h1 em{font-style:italic;color:var(--lotus-l)}
 .hero p.lead{max-width:54ch;font-size:1.15rem;color:#e6ece7;margin:0 0 28px}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 28px;padding:0;list-style:none}
-.chips li{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 16px;font-size:.86rem;background:rgba(27,9,17,.45);backdrop-filter:blur(4px)}
+.chips li{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 16px;font-size:.86rem;background:rgba(15,26,23,.45);backdrop-filter:blur(4px)}
 .chips b{color:var(--lotus-l)}
 .btns{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-block;text-decoration:none;font-weight:600;padding:13px 24px;border-radius:999px;font-size:.95rem;transition:transform .15s,background .15s;cursor:pointer;border:0;font-family:inherit}
@@ -202,7 +202,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 .monthbar button:hover:not(:disabled),.monthbar a:hover,.monthbar select:hover{border-color:var(--gold)}
 .monthbar button:disabled{opacity:.35;cursor:default}
 .monthbar select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;min-width:190px}
-.monthbar select option{background:#26101b;color:var(--ink)}
+.monthbar select option{background:#14231f;color:var(--ink)}
 .monthbar .grow{flex:1}
 .monthbar .mh{color:var(--gold);border-color:rgba(197,160,89,.45)}
 .aviso-arch{background:rgba(197,160,89,.1);border-bottom:1px solid rgba(197,160,89,.3);color:var(--ink);font-size:.92rem}
@@ -218,7 +218,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 .hist a.hm span{display:block;color:var(--soft);font-size:.85rem;margin-top:6px}
 .hist a.hm i{font-style:normal;display:inline-block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--gold);border-radius:999px;padding:2px 10px;margin-top:8px}
 .vacio{color:var(--soft);font-style:italic}
-.msg-prio{border:1px solid rgba(197,160,89,.55);background:linear-gradient(135deg,rgba(197,160,89,.14),rgba(143,29,58,.18));border-radius:18px;padding:22px 26px;margin-bottom:18px}
+.msg-prio{border:1px solid rgba(197,160,89,.55);background:linear-gradient(135deg,rgba(197,160,89,.14),rgba(194,79,155,.18));border-radius:18px;padding:22px 26px;margin-bottom:18px}
 .msg-prio b.t{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--gold);margin-bottom:6px}
 .msg-prio p{margin:0 0 12px;color:var(--ink)}
 .msg-prio .btns{margin:0}
