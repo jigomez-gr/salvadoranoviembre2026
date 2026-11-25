@@ -209,8 +209,24 @@ h3.sm{font-family:var(--serif);font-size:1.45rem;margin:0 0 16px}
 .contact .btns{justify-content:center;margin:26px 0 22px}
 .contact address{font-style:normal;color:var(--soft)}
 .note{font-size:.8rem;color:var(--soft);opacity:.8;max-width:70ch;margin:26px auto 0}
-footer{padding:30px 0 50px;text-align:center;font-size:.85rem;color:var(--soft);border-top:1px solid var(--line)}
+footer{padding:44px 0 50px;text-align:center;font-size:.85rem;color:var(--soft);border-top:1px solid var(--gold);background:#1a1a1a}
 footer a{color:var(--gold)}
+.ft-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 18px;margin:0 0 26px;padding:0;list-style:none;font-weight:600;font-size:1rem}
+.ft-legal a{color:#fff}
+.ft-legal li+li::before{content:'•';color:var(--soft);margin-right:18px}
+.ft-legal li:last-child a{color:#e9c46a}
+.ft-rgpd{max-width:960px;margin:0 auto 30px;padding:18px 24px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.03)}
+.ft-rgpd b{display:block;color:#e9c46a;margin-bottom:8px;font-size:.95rem}
+.ft-rgpd span{font-size:.78rem;color:var(--soft);line-height:1.5}
+.ft-soc{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:0 0 28px}
+.ft-soc a{display:inline-block;padding:9px 18px;border-radius:999px;font-weight:700;font-size:.9rem;border:1px solid}
+.ft-soc .ig{color:#ff9bd0;border-color:#8a2a63;background:rgba(138,42,99,.25)}
+.ft-soc .fb{color:#fff;border-color:#2c4f8f;background:rgba(44,79,143,.35)}
+.ft-soc .gg{color:#e9c46a;border-color:#8a6d1f;background:rgba(138,109,31,.25)}
+.ft-copy{border-top:1px solid var(--line);width:120px;margin:0 auto 22px}
+.ft-wm{margin-top:6px;opacity:.8}
+.btn--tg{background:#229ed9;color:#fff}
+.btn--tg:hover{background:#1b86b8}
 
 /* lightbox */
 dialog.lb{border:0;padding:0;background:transparent;max-width:min(94vw,980px);width:100%;color:#fff}
@@ -354,9 +370,10 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
       <p class="kicker">Reservas</p>
       <h2>Reserva tu plaza</h2>
       <hr class="rule" style="margin-inline:auto">
-      <p class="sec-sub" style="margin-inline:auto">Escríbenos por WhatsApp, llámanos o pásate por el centro.</p>
+      <p class="sec-sub" style="margin-inline:auto">Escríbenos por WhatsApp o Telegram, llámanos o pásate por el centro.</p>
       <div class="btns">
         <a class="btn btn--p" href="https://wa.me/34646034231" target="_blank" rel="noopener">WhatsApp · 646 03 42 31</a>
+        <a class="btn btn--tg" href="https://t.me/escuelayogasalvadoraconesa_bot" target="_blank" rel="noopener">Telegram · @escuelayogasalvadoraconesa_bot</a>
         <a class="btn btn--g" href="tel:+34695172625">Llamar · 695 172 625</a>
         <a class="btn btn--g" href="mailto:salvadoraconesa@gmail.com">salvadoraconesa@gmail.com</a>
       </div>
@@ -367,7 +384,23 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
 </main>
 
 <footer>
-  <div class="wrap">© <span id="yr"></span> Centro de Yoga Salvadora Conesa · <a href="https://salvadoraconesa.es/" data-landing>salvadoraconesa.es</a></div>
+  <div class="wrap">
+    <ul class="ft-legal">
+      <li><a href="https://salvadoraconesa.es/politica-de-privacidad" target="_blank" rel="noopener">Política de Privacidad</a></li>
+      <li><a href="https://salvadoraconesa.es/politica-de-cookies" target="_blank" rel="noopener">Política de Cookies</a></li>
+      <li><a href="https://salvadoraconesa.es/ley-de-proteccion-de-datos" target="_blank" rel="noopener">Ley de Protección de Datos (RGPD)</a></li>
+      <li><a href="https://salvadoraconesa.es/baja" target="_blank" rel="noopener">Baja de Servicios (Restricción Técnica)</a></li>
+    </ul>
+    <div class="ft-rgpd"><b>Cumplimiento Normativo RGPD (Reglamento UE 2016/679) y LOPDGDD 3/2018</b><span>Garantizamos la máxima confidencialidad, seguridad y transparencia en el tratamiento de sus datos personales, así como en el uso responsable de nuestros canales de asistencia interactiva y Asistente Virtual con Inteligencia Artificial.</span></div>
+    <div class="ft-soc">
+      <a class="ig" href="https://www.instagram.com/escuelayogasalvadoraconesa/" target="_blank" rel="noopener">Instagram</a>
+      <a class="fb" href="https://www.facebook.com/salvadoraconesa" target="_blank" rel="noopener">Facebook</a>
+      <a class="gg" href="https://g.page/r/CUN5JwrNyuu5EBM/review" target="_blank" rel="noopener">★ Opiniones en Google</a>
+    </div>
+    <hr class="ft-copy">
+    <div>© <span id="yr"></span> Centro de Yoga Fuenlabrada Salvadora Conesa. Todos los derechos reservados.</div>
+    <div class="ft-wm">WebMaster ReagrupamientoAI <a href="mailto:contacto@reagrupamientoAI.com">@reagrupamientoAI.com</a> · <a href="https://salvadoraconesa.es/" data-landing>salvadoraconesa.es</a></div>
+  </div>
 </footer>
 
 <dialog class="lb" id="lb" aria-label="Ampliar"><div class="lb__box"><button class="lb__x" id="lbx" type="button" aria-label="Cerrar">×</button><div id="lbc"></div></div></dialog>
