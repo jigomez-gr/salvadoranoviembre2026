@@ -182,6 +182,22 @@
           "cuando": "siempre"
         },
         {
+          "tipo": "video",
+          "texto": "▶ Vídeo de la actividad",
+          "url": "/videos/itinerario-3.mp4",
+          "poster": "/videos/itinerario-3-poster.jpg",
+          "estilo": "g",
+          "cuando": "siempre"
+        },
+        {
+          "tipo": "video",
+          "texto": "▶ Vídeo particular",
+          "url": "/videos/Bano-de-Gong_particular.mp4",
+          "estilo": "g",
+          "cuando": "siempre",
+          "poster": "/videos/Bano-de-Gong_particular-poster.jpg"
+        },
+        {
           "tipo": "link",
           "texto": "Próximo baño de gong",
           "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20es%20el%20pr%C3%B3ximo%20Ba%C3%B1o%20de%20Gong",

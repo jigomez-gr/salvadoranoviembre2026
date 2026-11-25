@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS ${S}.capitulo (
   descripcion text
 );
 ALTER TABLE ${S}.mes ADD COLUMN IF NOT EXISTS mensaje text;
+ALTER TABLE ${S}.mes ADD COLUMN IF NOT EXISTS galeria jsonb;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS sin_fecha boolean NOT NULL DEFAULT false;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS texto_fecha text;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS crm_id text;
@@ -105,6 +106,17 @@ function normalizarBoton(b) {
   return o;
 }
 
+function normalizarGaleria(g) {
+  if (!Array.isArray(g)) return [];
+  if (g.length > 80) throw new Error('Demasiados elementos en la galería (máx. 80)');
+  return g.map((x) => {
+    if (!x || typeof x !== 'object' || !urlOk(x.url)) return null;
+    const o = { tipo: x.tipo === 'imagen' ? 'imagen' : 'video', titulo: str(x.titulo, 200), url: x.url.trim().slice(0, 1000) };
+    if (o.tipo === 'video' && x.poster && urlOk(x.poster)) o.poster = x.poster.trim().slice(0, 1000);
+    return o;
+  }).filter(Boolean);
+}
+
 function normalizarMes(doc) {
   if (!doc || typeof doc !== 'object') throw new Error('Documento vacío');
   const anio = num(doc.anio), mes = num(doc.mes);
@@ -116,6 +128,7 @@ function normalizarMes(doc) {
     lead: str(doc.lead, 2000),
     subtituloCalendario: str(doc.subtituloCalendario, 1000),
     mensaje: html(doc.mensaje, 1500),
+    galeria: normalizarGaleria(doc.galeria),
     diasClase: Array.isArray(doc.diasClase) ? doc.diasClase.map((d) => num(d, -1)).filter((d) => d >= 0 && d <= 6) : [2, 3, 4],
     rutina: doc.rutina && typeof doc.rutina === 'object' ? doc.rutina : null,
     publicado: doc.publicado !== false,
@@ -246,7 +259,7 @@ function create(pool) {
     }
     return {
       anio: m.anio, mes: m.mes, titulo: m.titulo, lead: m.lead, subtituloCalendario: m.subtitulo_calendario,
-      diasClase: m.dias_clase, rutina: m.rutina, publicado: m.publicado, mensaje: m.mensaje,
+      diasClase: m.dias_clase, rutina: m.rutina, publicado: m.publicado, mensaje: m.mensaje, galeria: m.galeria || [],
       eventos: evs.map((e) => ({
         orden: e.orden, inicio: e.inicio, fin: e.fin, etiqueta: e.etiqueta, titulo: e.titulo, descripcion: e.descripcion,
         detalles: e.detalles, botones: e.botones, notaPasado: e.nota_pasado,
@@ -263,13 +276,13 @@ function create(pool) {
     try {
       await c.query('BEGIN');
       const m = (await c.query(
-        `INSERT INTO ${S}.mes (anio, mes, titulo, lead, subtitulo_calendario, dias_clase, rutina, publicado, mensaje)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+        `INSERT INTO ${S}.mes (anio, mes, titulo, lead, subtitulo_calendario, dias_clase, rutina, publicado, mensaje, galeria)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
          ON CONFLICT (anio, mes) DO UPDATE SET titulo = EXCLUDED.titulo, lead = EXCLUDED.lead,
            subtitulo_calendario = EXCLUDED.subtitulo_calendario, dias_clase = EXCLUDED.dias_clase,
-           rutina = EXCLUDED.rutina, publicado = EXCLUDED.publicado, mensaje = EXCLUDED.mensaje, actualizado = now()
+           rutina = EXCLUDED.rutina, publicado = EXCLUDED.publicado, mensaje = EXCLUDED.mensaje, galeria = EXCLUDED.galeria, actualizado = now()
          RETURNING id`,
-        [d.anio, d.mes, d.titulo, d.lead, d.subtituloCalendario, d.diasClase, d.rutina ? JSON.stringify(d.rutina) : null, d.publicado, d.mensaje])).rows[0];
+        [d.anio, d.mes, d.titulo, d.lead, d.subtituloCalendario, d.diasClase, d.rutina ? JSON.stringify(d.rutina) : null, d.publicado, d.mensaje, JSON.stringify(d.galeria || [])])).rows[0];
       await c.query(`DELETE FROM ${S}.evento WHERE mes_id = $1`, [m.id]);
       await c.query(`DELETE FROM ${S}.entrevista WHERE mes_id = $1`, [m.id]);
       for (const e of d.eventos) {

@@ -1,5 +1,5 @@
 # Estado del proyecto · Actividades del mes (Salvadora Conesa)
-Actualizado: 21/11/2026
+Actualizado: 25/11/2026
 
 ## Qué es
 Minilanding independiente con las actividades de cada mes, un selector de meses y un histórico. Un panel `/admin` (con contraseña) permite crear y editar meses sin tocar código.
@@ -25,8 +25,16 @@ Los **datos de cada mes** (textos, fechas, flyers, vídeos) se cambian en `/admi
   Vídeos fijos: yoga `itinerario-1` · meditaciones 2 · baño de gong 3 · puja gong 4 · gestalt 5 · constelaciones 6 · encuentros 7 · ayunos 8 · actos especiales 9.
 - El servicio "Formación en Constelaciones Familiares" ya no aparece al traer del CRM.
 
+- **Nueva paleta (23/11/2026)**: fondo verde casi negro `#0f1a17` / `#14231f`, acento rosa-magenta `#c24f9b`, rosa claro `#e8a3d3`, dorado `#c5a059` sin cambios. Aplicada en `public/index.html` y `public/admin.html` (variables CSS `--bg`, `--bg2`, `--lotus`, `--lotus-l`). Tonos estimados de una captura de `actividades-noviembre-2026`; ajustables ahí.
+- Subido a GitHub (rama main): commits `9693c73` "Medios por actividad y sin Formación" y `e43454e` "Nuevo color rosa". Árbol git limpio.
+
+- **Galería por mes y medios por mes (25/11/2026, pendiente de subir + Deploy)**: cada mes puede tener una galería de vídeos e imágenes extra (miniaturas que se amplían al pulsar). En `/admin` → sección «Galería de vídeos e imágenes». Lo que se sube ahí va a `/var/data/salvadora/media/meses/AAAA-MM/{videos,flyers}` y se sirve en `/m/AAAA-MM/videos|flyers/archivo`. Los medios antiguos (`/videos/…`, `/flyers/…`) siguen igual. Nueva columna `galeria` (jsonb) en `actividades.mes`, se crea sola al arrancar. Los MP4 nunca van a Git.
+  Los vídeos (galería y botones de vídeo de eventos) también admiten URL: YouTube y Vimeo se reproducen con su reproductor oficial incrustado (youtube-nocookie); un enlace directo a .mp4 se reproduce como archivo; cualquier otra web se abre en pestaña nueva.
+- Baño de gong 21/11: botones «Vídeo de la actividad» (`itinerario-3`) y «Vídeo particular» (`Bano-de-Gong_particular.mp4` + `-poster.jpg`) en `noviembre-2026-actualizado.json` y `seed/2026-11.json`. Falta el flyer particular (nombre por confirmar). Para verlo: `/admin` → Importar JSON.
+
 ## Pendiente
-1. `subir.bat "Medios por actividad y sin Formación"` + Deploy (cambia `db.js`; también `PROMPT_AGENTE_LANDING.md`).
+0. `subir.bat "Galeria por mes"` + Deploy en Dokploy (cambian `server.js`, `db.js`, `public/index.html`, `public/admin.html`), luego importar el JSON de noviembre en `/admin`.
+1. En Dokploy: **Deploy** de la app (si no se ha hecho tras `e43454e`) y comprobar `/api/estado` y el color con Ctrl+F5.
 2. Opcional: en `/admin` → **Importar JSON…** → `noviembre-2026-actualizado.json` (quita "Formación" de noviembre y añade 2 carteles y 2 vídeos a Constelaciones). Sustituye el contenido de noviembre por esa versión.
 3. Botón "Actividades del mes" en la landing: pasar `PROMPT_AGENTE_LANDING.md` al agente de la landing; después en Dokploy de la **landing** añadir `NEXT_PUBLIC_ACTIVIDADES_URL=https://salvadoranov2026.jigretera.com` y pulsar **Deploy** (esa variable se aplica al construir, no basta con reiniciar).
 4. Constelaciones del 14 nov: falta horario y lugar reales.

@@ -237,6 +237,14 @@ header.bar h1{font-size:1.5rem;flex:1}
       +(d.eventos||[]).map(evHtml).join('')
       +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" type="button" data-act="addEv">+ Añadir evento</button><button class="btn s" type="button" data-act="crm">⬇ Traer del CRM</button></div><div id="crmPanel"></div></div></details>';
 
+    /* galería del mes */
+    var gal=d.galeria||[];
+    h+='<details class="sec"'+(gal.length?' open':'')+'><summary>Galería de vídeos e imágenes ('+gal.length+')</summary><div class="in">'
+      +'<p class="hint">Vídeos e imágenes extra del mes. En la web salen como una cuadrícula de miniaturas; al pulsar una se abre ampliada. Lo que subas aquí se guarda en la carpeta propia de este mes ('+d.anio+'-'+pad(d.mes)+') y no se mezcla con otros meses. En «Vídeo» también puedes pegar una URL: de <b>YouTube</b> o <b>Vimeo</b> se reproduce en la propia página con su reproductor oficial; un enlace directo a un .mp4 se reproduce igual que un archivo subido; cualquier otra web (Instagram, Facebook, TikTok…) se abre en una pestaña nueva.</p>'
+      +gal.map(galHtml).join('')
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" type="button" data-act="addGal" data-t="video">+ Añadir vídeo</button><button class="btn s" type="button" data-act="addGal" data-t="imagen">+ Añadir imagen</button></div>'
+      +'</div></details>';
+
     /* 3. rutina */
     h+='<details class="sec"><summary>Clases habituales ("Tu rutina de bienestar")</summary><div class="in">'
       +'<p class="hint">Bloque opcional con horarios fijos. Se edita como JSON: copia el ejemplo del mes anterior y cambia solo los textos. Déjalo vacío para ocultar la sección.</p>'
@@ -284,6 +292,15 @@ header.bar h1{font-size:1.5rem;flex:1}
       +'<div class="row c2">'+fld('Detalles (uno por línea: horario, lugar, precio…)',p+'detalles',{area:true,kind:'lines',rows:4,fmt:lines,hint:'Puedes empezar con un emoji (🕘 📍 💶) y usar <b>negrita</b>.'})+fld('Nota al pie cuando ya ha pasado (opcional)',p+'notaPasado',{area:true,rows:4})+'</div>'
       +'<label>Botones</label>'+(e.botones||[]).map(function(b,j){return btHtml(i,j,b)}).join('')
       +'<button class="btn s" type="button" data-act="addBt" data-i="'+i+'">+ Añadir botón</button></div>';
+  }
+  function galHtml(g,i){
+    var p='galeria.'+i+'.',v=g.tipo!=='imagen';
+    return '<div class="bt" style="grid-template-columns:90px 1fr 1.6fr auto"><div><label>Tipo</label><b style="display:block;padding:8px 0">'+(v?'▶ Vídeo':'🖼 Imagen')+'</b></div>'
+      +'<div><label>Título (se ve en la miniatura)</label><input data-p="'+p+'titulo" value="'+esc(g.titulo)+'"></div>'
+      +'<div><label>'+(v?'Vídeo':'Imagen')+'</label><input data-p="'+p+'url" value="'+esc(g.url)+'" placeholder="'+(v?'https://www.youtube.com/watch?v=…  ·  URL de otra web  ·  o sube un archivo':'/m/'+DOC.anio+'-'+pad(DOC.mes)+'/flyers/archivo')+'">'
+      +'<div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'url" data-tipo="'+(v?'videos':'flyers')+'">Subir '+(v?'vídeo':'imagen')+'…</button></div><div class="bar-up" hidden><i></i></div>'
+      +(v?'<input data-p="'+p+'poster" value="'+esc(g.poster)+'" placeholder="Portada del vídeo (opcional)" style="margin-top:6px"><div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'poster" data-tipo="videos">Subir portada…</button></div><div class="bar-up" hidden><i></i></div>':'')+'</div>'
+      +'<div style="display:flex;gap:4px"><button class="btn s" type="button" data-act="galUp" data-i="'+i+'">↑</button><button class="btn s" type="button" data-act="galDown" data-i="'+i+'">↓</button><button class="btn s d" type="button" data-act="galDel" data-i="'+i+'">✕</button></div></div>';
   }
   function btHtml(i,j,b){
     var p='eventos.'+i+'.botones.'+j+'.';
@@ -336,6 +353,10 @@ header.bar h1{font-size:1.5rem;flex:1}
       var ult=ev[ev.length-1],base=ult?ult.inicio.slice(0,10):DOC.anio+'-'+pad(DOC.mes)+'-01';
       ev.push({orden:ev.length,inicio:base+'T18:00',fin:base+'T20:00',etiqueta:'',titulo:'Nuevo evento',descripcion:'',detalles:[],botones:[],notaPasado:''});marcarSucio();pintar();
     }
+    else if(act==='addGal'){DOC.galeria=DOC.galeria||[];DOC.galeria.push({tipo:b.dataset.t==='imagen'?'imagen':'video',titulo:'',url:''});marcarSucio();pintar()}
+    else if(act==='galDel'){if(confirm('¿Quitar este elemento de la galería? (el archivo no se borra del servidor)')){DOC.galeria.splice(i,1);marcarSucio();pintar()}}
+    else if(act==='galUp'&&i>0){var g1=DOC.galeria;var t3=g1[i];g1[i]=g1[i-1];g1[i-1]=t3;marcarSucio();pintar()}
+    else if(act==='galDown'&&i<(DOC.galeria||[]).length-1){var g2=DOC.galeria;var t4=g2[i];g2[i]=g2[i+1];g2[i+1]=t4;marcarSucio();pintar()}
     else if(act==='evDel'){if(confirm('¿Quitar este evento?')){ev.splice(i,1);marcarSucio();pintar()}}
     else if(act==='evUp'&&i>0){var t=ev[i];ev[i]=ev[i-1];ev[i-1]=t;marcarSucio();pintar()}
     else if(act==='evDown'&&i<ev.length-1){var t2=ev[i];ev[i]=ev[i+1];ev[i+1]=t2;marcarSucio();pintar()}
@@ -406,7 +427,8 @@ header.bar h1{font-size:1.5rem;flex:1}
       var cont=btn.parentNode.nextElementSibling,barra=cont&&cont.classList.contains('bar-up')?cont:null;
       if(barra){barra.hidden=false;barra.firstChild.style.width='0'}
       var x=new XMLHttpRequest();
-      x.open('POST','/api/admin/subir?tipo='+tipo+'&nombre='+encodeURIComponent(nombre));
+      var mesQ=btn.dataset.mes==='1'?DOC.anio+'-'+pad(DOC.mes):'';
+      x.open('POST','/api/admin/subir?tipo='+tipo+'&nombre='+encodeURIComponent(nombre)+(mesQ?'&mes='+mesQ:''));
       x.withCredentials=true;
       x.upload.onprogress=function(e){if(e.lengthComputable&&barra)barra.firstChild.style.width=(e.loaded/e.total*100)+'%'};
       x.onload=function(){
@@ -416,7 +438,7 @@ header.bar h1{font-size:1.5rem;flex:1}
           cargarMedios().then(pintar);
         }else{
           if(x.status===409&&confirm('Ya existe "'+nombre+'" en el servidor.\n\n¿Usar ese archivo que ya está subido (Aceptar) o cancelar para cambiar el nombre?')){
-            setP(DOC,btn.dataset.p,btn.dataset.solo==='nombre'?nombre:'/'+tipo+'/'+nombre);marcarSucio();pintar();
+            setP(DOC,btn.dataset.p,btn.dataset.solo==='nombre'?nombre:(mesQ?'/m/'+mesQ+'/':'/')+tipo+'/'+nombre);marcarSucio();pintar();
           }else toast(j.error||('Error '+x.status),true);
           if(barra)barra.hidden=true;
         }

@@ -165,7 +165,8 @@ async function handleUpload(req, res, q) {
   if (!nombre || !UPLOAD_EXT.has(ext)) return jsonOut(res, 400, { error: 'Nombre o extensión no permitida (mp4, webm, jpg, png, webp, pdf)' });
   const len = parseInt(req.headers['content-length'] || '0', 10);
   if (len > MAX_UPLOAD) return jsonOut(res, 413, { error: `Archivo demasiado grande (máx. ${MAX_UPLOAD / 1048576} MB)` });
-  const dir = path.join(ROOT, MEDIA_DIRS[tipo]);
+  const mesQ = /^\d{4}-(0[1-9]|1[0-2])$/.test(q.get('mes') || '') ? q.get('mes') : '';
+  const dir = mesQ ? path.join(ROOT, 'meses', mesQ, MEDIA_DIRS[tipo]) : path.join(ROOT, MEDIA_DIRS[tipo]);
   const dest = safeJoin(dir, nombre);
   if (!dest) return jsonOut(res, 400, { error: 'Nombre no válido' });
   // La carpeta de medios es COMPARTIDA con la landing: nunca se pisa un archivo existente.
@@ -183,7 +184,7 @@ async function handleUpload(req, res, q) {
   out.on('finish', () => {
     if (abortado) return;
     try { fs.renameSync(tmp, dest); } catch (e) { try { fs.unlinkSync(tmp); } catch {} return jsonOut(res, 500, { error: 'No se pudo guardar: ' + e.code }); }
-    jsonOut(res, 200, { ok: true, tipo, nombre, bytes: n, url: `/${tipo}/${nombre}` });
+    jsonOut(res, 200, { ok: true, tipo, nombre, bytes: n, url: mesQ ? `/m/${mesQ}/${tipo}/${nombre}` : `/${tipo}/${nombre}` });
   });
   req.pipe(out);
 }
@@ -302,6 +303,13 @@ const server = http.createServer(async (req, res) => {
     if (p === '/config.js') {
       res.writeHead(200, { 'Content-Type': MIME['.js'], 'Cache-Control': 'no-store' });
       return res.end(`window.SALVADORA_LANDING=${JSON.stringify(LANDING_URL)};`);
+    }
+
+    const mm = /^\/m\/(\d{4}-(?:0[1-9]|1[0-2]))\/(videos|flyers)\/(.+)$/.exec(p);
+    if (mm) {
+      const f = safeJoin(path.join(ROOT, 'meses', mm[1], mm[2]), mm[3]);
+      if (!f || !exists(f)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('Medio no encontrado: ' + mm[3]); }
+      return sendFile(req, res, f, null, 'public, max-age=86400');
     }
 
     const m = /^\/(videos|flyers|documentos)\/(.+)$/.exec(p);
