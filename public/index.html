@@ -553,7 +553,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
         return '<button class="'+cls+'" data-t="'+(+b.t||0)+'" type="button">'+esc(b.texto)+'</button>';
       }).join('');
       var eg=(e.galeria||[]).filter(function(x){return x&&x.url&&x.mostrar!=='mes'});
-      if(eg.length)bt+='<button class="btn btn--s evg-btn" type="button" data-evgal="'+n+'" aria-expanded="false" aria-controls="evg-'+n+'">🖼 Galería ('+eg.length+')</button>';
+      if(eg.length)bt+='<button class="btn btn--s evg-btn on" type="button" data-evgal="'+n+'" aria-expanded="true" aria-controls="evg-'+n+'">🖼 Galería ('+eg.length+')</button>';
       return '<article class="ev rv'+(sf?' sf':'')+'" id="ev-'+n+'"'+(sf?'':' data-start="'+esc(e.inicio)+'" data-end="'+esc(e.fin)+'"')+'>'
         +(sf?'<div class="ev__date"><span class="dow">Próximamente</span><span class="day" style="font-size:2.2rem">···</span><span class="mon">Fecha por confirmar</span></div>'
             :'<div class="ev__date"><span class="dow">'+dow+'</span><span class="day">'+s.getDate()+'</span><span class="mon">'+mesN.charAt(0).toUpperCase()+mesN.slice(1)+'</span></div>')
@@ -561,7 +561,7 @@ dialog.lb::backdrop{background:rgba(10,3,6,.88)}
         +'<h3>'+esc(e.titulo)+'</h3>'+(e.descripcion?'<p>'+e.descripcion+'</p>':'')
         +(det.length?'<ul class="meta">'+det.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')
         +(bt?'<div class="btns">'+bt+'</div>':'')
-        +(eg.length?'<div class="evgal" id="evg-'+n+'" hidden><div class="evgal__top"><b>🖼 Galería · '+esc(e.titulo)+'</b><span class="evgal__nav"><button type="button" class="evgal__n" data-gcar="-1" aria-label="Anterior">‹</button><button type="button" class="evgal__n" data-gcar="1" aria-label="Siguiente">›</button><button type="button" class="evgal__x" data-evgal="'+n+'" aria-label="Cerrar galería">✕ Cerrar</button></span></div><div class="gal">'+eg.map(galItem).join('')+'</div></div>':'')
+        +(eg.length?'<div class="evgal" id="evg-'+n+'"><div class="evgal__top"><b>🖼 Galería · '+esc(e.titulo)+'</b><span class="evgal__nav"><button type="button" class="evgal__n" data-gcar="-1" aria-label="Anterior">‹</button><button type="button" class="evgal__n" data-gcar="1" aria-label="Siguiente">›</button><button type="button" class="evgal__x" data-evgal="'+n+'" aria-label="Cerrar galería">✕ Cerrar</button></span></div><div class="gal">'+eg.map(galItem).join('')+'</div></div>':'')
         +(e.notaPasado?'<p class="note-past">'+esc(e.notaPasado)+'</p>':'')
         +'</div></article>';
     }).join('');
