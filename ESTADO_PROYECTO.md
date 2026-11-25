@@ -32,6 +32,8 @@ Los **datos de cada mes** (textos, fechas, flyers, vídeos) se cambian en `/admi
   Los vídeos (galería y botones de vídeo de eventos) también admiten URL: YouTube y Vimeo se reproducen con su reproductor oficial incrustado (youtube-nocookie); un enlace directo a .mp4 se reproduce como archivo; cualquier otra web se abre en pestaña nueva.
 - Baño de gong 21/11: botones «Vídeo de la actividad» (`itinerario-3`) y «Vídeo particular» (`Bano-de-Gong_particular.mp4` + `-poster.jpg`) en `noviembre-2026-actualizado.json` y `seed/2026-11.json`. Falta el flyer particular (nombre por confirmar). Para verlo: `/admin` → Importar JSON.
 
+- **Formulario de evento en `/admin` (25/11/2026, pendiente de subir + Deploy)**: cada evento tiene selector «Actividad» (CRM + las 9 base que rellena título, etiqueta y vídeo), Inicio/Fin, Horario, Lugar, Precio y 4 medios fijos: vídeo de la actividad, vídeo particular, cartel de la actividad y cartel particular (ruta, URL de YouTube u otra web, o «Subir archivo…», con portada opcional en los vídeos). Se guardan en `botones` con `slot` = vAct/vPart/fAct/fPart; los vacíos no salen en la web. Ya no hace falta importar JSON para editar.
+
 ## Pendiente
 0. `subir.bat "Galeria por mes"` + Deploy en Dokploy (cambian `server.js`, `db.js`, `public/index.html`, `public/admin.html`), luego importar el JSON de noviembre en `/admin`.
 1. En Dokploy: **Deploy** de la app (si no se ha hecho tras `e43454e`) y comprobar `/api/estado` y el color con Ctrl+F5.

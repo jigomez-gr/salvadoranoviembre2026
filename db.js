@@ -98,6 +98,7 @@ function normalizarBoton(b) {
   if (!b || typeof b !== 'object') return null;
   const tipo = TIPOS.includes(b.tipo) ? b.tipo : 'link';
   const o = { tipo, texto: str(b.texto, 200) || 'Ver', estilo: b.estilo === 'p' ? 'p' : 'g', cuando: CUANDO.includes(b.cuando) ? b.cuando : 'siempre' };
+  if (['vAct', 'vPart', 'fAct', 'fPart'].includes(b.slot)) o.slot = b.slot;
   if (tipo === 'capitulo') { o.t = Math.max(0, num(b.t)); return o; }
   if (!urlOk(b.url)) return null;
   o.url = b.url.trim().slice(0, 1000);
@@ -157,7 +158,7 @@ function normalizarMes(doc) {
       titulo: str(e.titulo, 300),
       descripcion: html(e.descripcion, 6000),
       detalles: (Array.isArray(e.detalles) ? e.detalles : []).map((d) => html(d, 600)).filter(Boolean).slice(0, 12),
-      botones: (Array.isArray(e.botones) ? e.botones : []).map(normalizarBoton).filter(Boolean).slice(0, 8),
+      botones: (Array.isArray(e.botones) ? e.botones : []).map(normalizarBoton).filter(Boolean).slice(0, 12),
       notaPasado: str(e.notaPasado, 600),
     });
   });
@@ -355,7 +356,16 @@ function create(pool) {
     if (!vids.length) vids = ['/videos/itinerario-' + itinerarioDe((r.name || '') + ' ' + (r.categoria || '')) + '.mp4'];
     // máximo dos de cada
     vids = vids.slice(0, 2); flys = flys.slice(0, 2);
+    const conv = (u) => (u ? u.replace(/\.(mp4|webm)$/i, '-poster.jpg') : '');
+    const slots = {
+      vAct: mediaUrl(r.videoUrl) || deTabla('video')[0] || '/videos/itinerario-' + itinerarioDe((r.name || '') + ' ' + (r.categoria || '')) + '.mp4',
+      vPart: mediaUrl(r.videoParticularUrl) || '',
+      fAct: mediaUrl(r.flyerUrl) || deTabla('flyer')[0] || '',
+      fPart: mediaUrl(r.flyerParticularUrl) || '',
+    };
+    slots.vActPoster = conv(slots.vAct); slots.vPartPoster = conv(slots.vPart);
     return {
+      slots,
       flyers: flys,
       videos: vids.map((u) => {
         const it = /\/videos\/(itinerario-\d+)\.mp4$/i.exec(u);
@@ -385,7 +395,7 @@ function create(pool) {
       descripcion: escHtml(r.description).replace(/\n+/g, '<br>'),
       sinFecha, textoFecha: sinFecha ? (r.eventDatesText || null) : null,
       inicio: ini || undefined, fin: fin || undefined,
-      detalles, botones,
+      detalles, botones, _medios: m.slots,
       _recurrente: r.serviceType === 'recurring', _activo: r.isActive !== false,
     };
   }
