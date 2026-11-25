@@ -1,352 +1,365 @@
 {
-  "anio": 2026,
-  "mes": 11,
-  "publicado": true,
-  "titulo": "Actividades de noviembre 2026",
-  "lead": "Un mes para parar, respirar y sentir: Bienestar Experience, constelaciones familiares, baño de gong, yoga terapéutico y una conversación con Salvadora Conesa sobre cómo empezar a meditar.",
-  "subtituloCalendario": "Guardamos aquí todo el mes, también lo ya celebrado, para que puedas ver cómo fue y no perderte lo próximo.",
-  "diasClase": [
-    2,
-    3,
-    4
-  ],
-  "rutina": {
-    "kicker": "Todo el mes",
-    "titulo": "Tu rutina de bienestar",
-    "subtitulo": "Las clases de siempre en el centro continúan durante todo el mes. La primera clase es gratuita.",
-    "tarjetas": [
-      {
-        "titulo": "Hatha Yoga Terapéutico",
-        "sub": "Cuidado de la espalda y las articulaciones",
-        "horarios": [
-          [
-            "Martes",
-            "9:45 · 11:15 · 17:00 · 18:30 · 20:00"
-          ],
-          [
-            "Miércoles",
-            "20:15"
-          ],
-          [
-            "Jueves",
-            "9:45 · 11:15 · 16:00 · 17:30 · 19:00"
-          ]
-        ],
-        "html": "<p style=\"margin-top:14px\">Matrícula mensual: 25 € (1 clase/semana) · 42 € (2 clases/semana) · clase suelta 10 €.</p>"
-      },
-      {
-        "titulo": "Meditaciones guiadas",
-        "sub": "Martes y jueves · 9:15 – 9:45",
-        "html": "<p>Treinta minutos para empezar el día con calma. Máximo 28 personas.</p><p>Gratis para alumnos de yoga. Para el resto: 3 € por sesión o 15 € al mes.</p>"
-      },
-      {
-        "titulo": "Gong en tu clase",
-        "sub": "Última semana de cada mes",
-        "html": "<p>Como regalo a sus alumnos, Salvadora cierra la relajación de la última semana del mes con uno, dos o tres gongs.</p><p>Y una vez al mes, sesión de dos horas con gongs, cuencos tibetanos y cuencos de cuarzo.</p>"
-      }
-    ]
-  },
-  "eventos": [
-    {
-      "orden": 1,
-      "inicio": "2026-11-13T16:30",
-      "fin": "2026-11-13T21:30",
-      "etiqueta": "Encuentro",
-      "titulo": "Bienestar Experience",
-      "descripcion": "<b>Más allá del tumor · Una visión integrativa del cáncer.</b> Biohacking y medicina del estilo de vida con Txiki Soto (salud integrativa), Giulliana Gabaldoni (Diseña tu vida) y Salvadora Conesa, que cerró el encuentro con terapia de sonido: un baño de tres gongs para armonizar la vibración de todos los asistentes.",
-      "detalles": [
-        "🕟 <b>16:30 – 21:30 h</b>",
-        "📍 <b>Impact Hub Gobernador</b> · C/ del Gobernador, 26 · Madrid",
-        "🚇 Metro Antón Martín (L1) · Sala accesible",
-        "🎟 Entrada general <b>19,99 €</b> (Eventbrite)"
-      ],
-      "botones": [
-        {
-          "tipo": "link",
-          "texto": "Entradas e información",
-          "url": "https://txikisoto.com/bienestarexperience",
-          "estilo": "g",
-          "cuando": "vivo"
-        },
-        {
-          "tipo": "video",
-          "texto": "▶ Ver el vídeo promo",
-          "url": "/videos/Promo_Bienestar-Experience-2026_1920x1080.mp4",
-          "poster": "/videos/Promo_Bienestar-Experience-2026_1920x1080-poster.jpg",
-          "estilo": "p",
-          "cuando": "pasado"
-        },
-        {
-          "tipo": "imagen",
-          "texto": "Ver el cartel",
-          "url": "/flyers/flyer13nov2026vivemasparticular.jpeg",
-          "alt": "Cartel Bienestar Experience 2026 · Más allá del tumor",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "capitulo",
-          "texto": "Escucha a Salvadora en la entrevista",
-          "t": 859,
-          "estilo": "g",
-          "cuando": "pasado"
-        }
-      ],
-      "notaPasado": "Evento de bienestar: no sustituye ningún tratamiento médico."
-    },
-    {
-      "orden": 2,
-      "inicio": "2026-11-14T00:00",
-      "fin": "2026-11-14T23:59",
-      "etiqueta": "Terapia de grupo",
-      "titulo": "Constelaciones familiares",
-      "descripcion": "Terapia grupal para ordenar y esclarecer dinámicas familiares inconscientes, dirigida por Salvadora Conesa, terapeuta Gestalt y facilitadora de constelaciones.",
-      "detalles": [
-        "🕘 <span class=\"ph\">[horario por añadir]</span>",
-        "📍 <span class=\"ph\">[lugar por añadir]</span>"
-      ],
-      "botones": [
-        {
-          "tipo": "link",
-          "texto": "Pedir información",
-          "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20Constelaciones%20Familiares",
-          "estilo": "g",
-          "cuando": "vivo"
-        },
-        {
-          "tipo": "link",
-          "texto": "Avísame de la próxima",
-          "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20ser%C3%A1%20la%20pr%C3%B3xima%20Constelaci%C3%B3n%20Familiar",
-          "estilo": "g",
-          "cuando": "pasado"
-        },
-        {
-          "tipo": "imagen",
-          "texto": "Ver el cartel 1",
-          "url": "/flyers/constelaciones_familiares_particular.jpg",
-          "alt": "Cartel Constelaciones Familiares",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "imagen",
-          "texto": "Ver el cartel 2",
-          "url": "/flyers/constalaciones.jpeg",
-          "alt": "Cartel Constelaciones Familiares (general)",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "video",
-          "texto": "▶ Ver el vídeo 1",
-          "url": "/videos/constelacionesparticular.mp4",
-          "poster": "/videos/constelacionesparticular-poster.jpg",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "video",
-          "texto": "▶ Ver el vídeo 2",
-          "url": "/videos/itinerario-6.mp4",
-          "poster": "/videos/itinerario-6-poster.jpg",
-          "estilo": "g",
-          "cuando": "siempre"
-        }
-      ]
-    },
-    {
-      "orden": 3,
-      "inicio": "2026-11-21T18:00",
-      "fin": "2026-11-21T20:00",
-      "etiqueta": "Sonoterapia",
-      "titulo": "Baño de gong y meditación sonora",
-      "descripcion": "Terapia vibracional de armonización celular y disolución de tensiones a través de gongs sinfónicos.",
-      "detalles": [
-        "🕕 <b>18:00 – 20:00 h</b> (2 horas)",
-        "💶 <b>16 €</b>",
-        "📍 Calle Holanda, 1 · Fuenlabrada"
-      ],
-      "botones": [
-        {
-          "tipo": "link",
-          "texto": "Reservar por WhatsApp",
-          "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20reservar%20el%20Ba%C3%B1o%20de%20Gong%20del%2021%20de%20noviembre",
-          "estilo": "p",
-          "cuando": "vivo"
-        },
-        {
-          "tipo": "capitulo",
-          "texto": "¿Qué se siente en un baño de gong?",
-          "t": 1027,
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "video",
-          "texto": "▶ Vídeo de la actividad",
-          "url": "/videos/itinerario-3.mp4",
-          "poster": "/videos/itinerario-3-poster.jpg",
-          "estilo": "g",
-          "cuando": "siempre"
-        },
-        {
-          "tipo": "video",
-          "texto": "▶ Vídeo particular",
-          "url": "/videos/Bano-de-Gong_particular.mp4",
-          "estilo": "g",
-          "cuando": "siempre",
-          "poster": "/videos/Bano-de-Gong_particular-poster.jpg"
-        },
-        {
-          "tipo": "link",
-          "texto": "Próximo baño de gong",
-          "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20es%20el%20pr%C3%B3ximo%20Ba%C3%B1o%20de%20Gong",
-          "estilo": "g",
-          "cuando": "pasado"
-        }
-      ]
-    }
-  ],
-  "entrevista": {
-    "kicker": "Entrevista · Madridmarket.es",
-    "titulo": "Conversación con Salvadora Conesa",
-    "subtitulo": "Ayuno, yoga terapéutico, gong y el arte de aprender a meditar. Pulsa cualquier capítulo y el vídeo salta a ese momento.",
-    "entrevistador": "Santiago Ángel García",
-    "medio": "Madridmarket.es",
-    "invitada": "Salvadora Conesa",
-    "invitadaDetalle": "Yoga, ayuno y gong · Escuela de Yoga de Fuenlabrada",
-    "duracion": "18 min",
-    "duracionResumen": "4 min",
-    "videoCompleto": "entrevista_madridmarket_completa.mp4",
-    "videoResumen": "entrevista_madridmarket_resumen.mp4",
-    "poster": "entrevista_madridmarket_poster.jpg",
-    "capitulos": [
-      {
-        "t": 1,
-        "titulo": "Presentación de Salvadora Conesa",
-        "descripcion": "Santiago Ángel García recibe a una invitada que lleva cuarenta años dedicada al yoga: profesora, directora de su escuela, terapeuta Gestalt y coordinadora de grupos de ayuno."
-      },
-      {
-        "t": 36,
-        "titulo": "El ayuno y los encuentros de bienestar",
-        "descripcion": "Por qué descansar el aparato digestivo sienta tan bien, ayunos de cuatro días con líquidos y encuentros con amaneceres y paseos descalzos."
-      },
-      {
-        "t": 119,
-        "titulo": "Yoga terapéutico y la vibración del gong",
-        "descripcion": "Hatha yoga con enfoque terapéutico para la columna y las articulaciones, y el gong como maestro: nunca suena igual."
-      },
-      {
-        "t": 208,
-        "titulo": "¿Cómo se entra antes en meditación?",
-        "descripcion": "Sentarse con la espalda erguida y respirar hondo. Por qué tumbado no es meditar y cómo el gong acompaña a la mente."
-      },
-      {
-        "t": 333,
-        "titulo": "¿Solo o acompañado?",
-        "descripcion": "Meditar en grupo es como ir en pelotón. Una guía breve y después silencio: si alguien habla todo el rato, es visualización."
-      },
-      {
-        "t": 435,
-        "titulo": "Qué se siente al meditar: la mente en «síntesis»",
-        "descripcion": "Dejar la mente en blanco es dejarla en síntesis: sentir la respiración y el espacio entre un pensamiento y el siguiente."
-      },
-      {
-        "t": 597,
-        "titulo": "Visualización, meditación, el Dalai Lama y las ondas cerebrales",
-        "descripcion": "La diferencia entre llevar la mente en una dirección y simplemente parar. Lo que miden los encefalogramas en meditación profunda."
-      },
-      {
-        "t": 689,
-        "titulo": "Cuarenta años de práctica y el «estado de gracia»",
-        "descripcion": "Practica desde 1986. La paz siempre llega; el momento especial no, y ahí es donde el gong ayuda."
-      },
-      {
-        "t": 737,
-        "titulo": "La meditación y la vida en pareja",
-        "descripcion": "Meditar no rompe una pareja: te hace ver cosas que antes no veías, y eso nunca es un riesgo de la meditación."
-      },
-      {
-        "t": 824,
-        "titulo": "Los once minutos que cambian el día",
-        "descripcion": "Un día sí y otro no, de 10 a 15 minutos; lo ideal, once. Y la máxima de su maestro: si no tienes tiempo para once, medita veintidós."
-      },
-      {
-        "t": 859,
-        "titulo": "Tocar el gong como meditación",
-        "descripcion": "De pie y en movimiento, con dos o tres gongs a la vez. En el Bienestar Experience cerró el encuentro con tres gongs."
-      },
-      {
-        "t": 947,
-        "titulo": "Sesiones de gong, cuencos tibetanos y de cuarzo",
-        "descripcion": "Cada metal vibra distinto. Relajación con gong al final de cada mes y una sesión mensual de dos horas."
-      },
-      {
-        "t": 1027,
-        "titulo": "Una historia: el olfato que volvió",
-        "descripcion": "Un hombre que llevaba tres años sin olfato ni gusto tras el Covid salió de un baño de gong y esa noche, cenando, volvió a notar los sabores."
-      }
+ "anio": 2026,
+ "mes": 11,
+ "publicado": true,
+ "titulo": "Actividades de noviembre 2026",
+ "lead": "Un mes para parar, respirar y sentir: Bienestar Experience, constelaciones familiares, baño de gong, yoga terapéutico y una conversación con Salvadora Conesa sobre cómo empezar a meditar.",
+ "subtituloCalendario": "Guardamos aquí todo el mes, también lo ya celebrado, para que puedas ver cómo fue y no perderte lo próximo.",
+ "diasClase": [
+  2,
+  3,
+  4
+ ],
+ "rutina": {
+  "kicker": "Todo el mes",
+  "titulo": "Tu rutina de bienestar",
+  "subtitulo": "Las clases de siempre en el centro continúan durante todo el mes. La primera clase es gratuita.",
+  "tarjetas": [
+   {
+    "titulo": "Hatha Yoga Terapéutico",
+    "sub": "Cuidado de la espalda y las articulaciones",
+    "horarios": [
+     [
+      "Martes",
+      "9:45 · 11:15 · 17:00 · 18:30 · 20:00"
+     ],
+     [
+      "Miércoles",
+      "20:15"
+     ],
+     [
+      "Jueves",
+      "9:45 · 11:15 · 16:00 · 17:30 · 19:00"
+     ]
     ],
-    "extra": {
-      "destacados": [
-        {
-          "icono": "🌅",
-          "titulo": "Ayuno y descanso digestivo",
-          "texto": "Cuantas más horas descansa el aparato digestivo, mejor. Propone un par de ayunos de cuatro días al año, solo con líquidos."
-        },
-        {
-          "icono": "🧘",
-          "titulo": "Yoga terapéutico",
-          "texto": "Una práctica pensada para cuidar la columna y las articulaciones, con asanas, respiración y meditación."
-        },
-        {
-          "icono": "🔔",
-          "titulo": "El gong, un maestro",
-          "texto": "Terapia de vibración que nunca suena igual: cambia con el día, la temperatura y las personas de la sala."
-        },
-        {
-          "icono": "🌿",
-          "titulo": "Meditar es entrenar",
-          "texto": "No se trata de dejar la mente en blanco, sino de parar, sentir la respiración y dar espacio entre pensamientos."
-        }
-      ],
-      "cita": {
-        "texto": "Te ocupas de las cosas, pero no te preocupas.",
-        "autor": "Salvadora Conesa, sobre lo que deja la meditación"
-      },
-      "pasos": {
-        "titulo": "Cómo empezar a meditar",
-        "items": [
-          {
-            "b": "Siéntate con la espalda erguida.",
-            "texto": "Una silla con respaldo es perfecta."
-          },
-          {
-            "b": "Respira hondo y para.",
-            "texto": "Relaja el sistema nervioso y atiende a la respiración."
-          },
-          {
-            "b": "Ponle un cronómetro.",
-            "texto": "Empieza con unos siete minutos, un día sí y otro no."
-          },
-          {
-            "b": "Acompañado es más fácil.",
-            "texto": "En grupo es como ir en pelotón."
-          },
-          {
-            "b": "Crece poco a poco.",
-            "texto": "Lo ideal, unos once minutos. Y si no tienes tiempo, medita veintidós."
-          }
-        ]
-      },
-      "historia": {
-        "titulo": "Una historia que no deja indiferente",
-        "h4": "Tres años sin olfato ni gusto",
-        "texto": "Un hombre que había perdido el olfato y el gusto tras el Covid asistió a un baño de gong con su mujer. Esa misma noche, cenando, volvió a distinguir los sabores. Para Salvadora, la vibración del gong se dirige a las zonas bloqueadas del cuerpo y ayuda a liberarlas.",
-        "t": 1027,
-        "boton": "▶ Verlo en la entrevista"
-      },
-      "aviso": "Las experiencias y opiniones recogidas en la entrevista son personales y no sustituyen el consejo de un profesional sanitario."
+    "html": "<p style=\"margin-top:14px\">Matrícula mensual: 25 € (1 clase/semana) · 42 € (2 clases/semana) · clase suelta 10 €.</p>"
+   },
+   {
+    "titulo": "Meditaciones guiadas",
+    "sub": "Martes y jueves · 9:15 – 9:45",
+    "html": "<p>Treinta minutos para empezar el día con calma. Máximo 28 personas.</p><p>Gratis para alumnos de yoga. Para el resto: 3 € por sesión o 15 € al mes.</p>"
+   },
+   {
+    "titulo": "Gong en tu clase",
+    "sub": "Última semana de cada mes",
+    "html": "<p>Como regalo a sus alumnos, Salvadora cierra la relajación de la última semana del mes con uno, dos o tres gongs.</p><p>Y una vez al mes, sesión de dos horas con gongs, cuencos tibetanos y cuencos de cuarzo.</p>"
+   }
+  ]
+ },
+ "eventos": [
+  {
+   "orden": 1,
+   "inicio": "2026-11-13T16:30",
+   "fin": "2026-11-13T21:30",
+   "etiqueta": "Encuentro",
+   "titulo": "Bienestar Experience",
+   "descripcion": "<b>Más allá del tumor · Una visión integrativa del cáncer.</b> Biohacking y medicina del estilo de vida con Txiki Soto (salud integrativa), Giulliana Gabaldoni (Diseña tu vida) y Salvadora Conesa, que cerró el encuentro con terapia de sonido: un baño de tres gongs para armonizar la vibración de todos los asistentes.",
+   "detalles": [
+    "🕟 <b>16:30 – 21:30 h</b>",
+    "📍 <b>Impact Hub Gobernador</b> · C/ del Gobernador, 26 · Madrid",
+    "🚇 Metro Antón Martín (L1) · Sala accesible",
+    "🎟 Entrada general <b>19,99 €</b> (Eventbrite)"
+   ],
+   "botones": [
+    {
+     "tipo": "link",
+     "texto": "Entradas e información",
+     "url": "https://txikisoto.com/bienestarexperience",
+     "estilo": "g",
+     "cuando": "vivo"
+    },
+    {
+     "tipo": "video",
+     "texto": "▶ Ver el vídeo promo",
+     "url": "/videos/Promo_Bienestar-Experience-2026_1920x1080.mp4",
+     "poster": "/videos/Promo_Bienestar-Experience-2026_1920x1080-poster.jpg",
+     "estilo": "p",
+     "cuando": "pasado"
+    },
+    {
+     "tipo": "imagen",
+     "texto": "Ver el cartel",
+     "url": "/flyers/flyer13nov2026vivemasparticular.jpeg",
+     "alt": "Cartel Bienestar Experience 2026 · Más allá del tumor",
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "capitulo",
+     "texto": "Escucha a Salvadora en la entrevista",
+     "t": 859,
+     "estilo": "g",
+     "cuando": "pasado"
     }
+   ],
+   "notaPasado": "Evento de bienestar: no sustituye ningún tratamiento médico."
+  },
+  {
+   "orden": 2,
+   "inicio": "2026-11-14T00:00",
+   "fin": "2026-11-14T23:59",
+   "etiqueta": "Terapia de grupo",
+   "titulo": "Constelaciones familiares",
+   "descripcion": "Terapia grupal para ordenar y esclarecer dinámicas familiares inconscientes, dirigida por Salvadora Conesa, terapeuta Gestalt y facilitadora de constelaciones.",
+   "detalles": [
+    "🕘 <span class=\"ph\">[horario por añadir]</span>",
+    "📍 <span class=\"ph\">[lugar por añadir]</span>"
+   ],
+   "botones": [
+    {
+     "tipo": "link",
+     "texto": "Pedir información",
+     "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20Constelaciones%20Familiares",
+     "estilo": "g",
+     "cuando": "vivo"
+    },
+    {
+     "tipo": "link",
+     "texto": "Avísame de la próxima",
+     "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20ser%C3%A1%20la%20pr%C3%B3xima%20Constelaci%C3%B3n%20Familiar",
+     "estilo": "g",
+     "cuando": "pasado"
+    },
+    {
+     "tipo": "imagen",
+     "texto": "Ver el cartel 1",
+     "url": "/flyers/constelaciones_familiares_particular.jpg",
+     "alt": "Cartel Constelaciones Familiares",
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "imagen",
+     "texto": "Ver el cartel 2",
+     "url": "/flyers/constalaciones.jpeg",
+     "alt": "Cartel Constelaciones Familiares (general)",
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "video",
+     "texto": "▶ Ver el vídeo 1",
+     "url": "/videos/constelacionesparticular.mp4",
+     "poster": "/videos/constelacionesparticular-poster.jpg",
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "video",
+     "texto": "▶ Ver el vídeo 2",
+     "url": "/videos/itinerario-6.mp4",
+     "poster": "/videos/itinerario-6-poster.jpg",
+     "estilo": "g",
+     "cuando": "siempre"
+    }
+   ]
+  },
+  {
+   "orden": 3,
+   "inicio": "2026-11-21T18:00",
+   "fin": "2026-11-21T20:00",
+   "etiqueta": "Sonoterapia",
+   "titulo": "Baño de gong y meditación sonora",
+   "descripcion": "Terapia vibracional de armonización celular y disolución de tensiones a través de gongs sinfónicos.",
+   "detalles": [
+    "🕕 <b>18:00 – 20:00 h</b> (2 horas)",
+    "💶 <b>16 €</b>",
+    "📍 Calle Holanda, 1 · Fuenlabrada"
+   ],
+   "botones": [
+    {
+     "tipo": "link",
+     "texto": "Reservar por WhatsApp",
+     "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20reservar%20el%20Ba%C3%B1o%20de%20Gong%20del%2021%20de%20noviembre",
+     "estilo": "p",
+     "cuando": "vivo"
+    },
+    {
+     "tipo": "capitulo",
+     "texto": "¿Qué se siente en un baño de gong?",
+     "t": 1027,
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "video",
+     "texto": "▶ Vídeo de la actividad",
+     "url": "/videos/itinerario-3.mp4",
+     "poster": "/videos/itinerario-3-poster.jpg",
+     "estilo": "g",
+     "cuando": "siempre"
+    },
+    {
+     "tipo": "video",
+     "texto": "▶ Vídeo particular",
+     "url": "/videos/Bano-de-Gong_particular.mp4",
+     "estilo": "g",
+     "cuando": "siempre",
+     "poster": "/videos/Bano-de-Gong_particular-poster.jpg"
+    },
+    {
+     "tipo": "link",
+     "texto": "Próximo baño de gong",
+     "url": "https://wa.me/34646034231?text=Hola%2C%20quiero%20saber%20cu%C3%A1ndo%20es%20el%20pr%C3%B3ximo%20Ba%C3%B1o%20de%20Gong",
+     "estilo": "g",
+     "cuando": "pasado"
+    }
+   ],
+   "galeria": [
+    {
+     "tipo": "video",
+     "titulo": "José María Molero - Yeye de Cádiz (Bulerías)",
+     "url": "https://www.youtube.com/watch?v=Q8UETtyKUZA"
+    },
+    {
+     "tipo": "video",
+     "titulo": "CASA PATAS, FLAMENCO EN VIVO 56 - YEYE DE CADIZ",
+     "url": "https://www.youtube.com/watch?v=gRJIDO8YWuI"
+    }
+   ]
   }
+ ],
+ "entrevista": {
+  "kicker": "Entrevista · Madridmarket.es",
+  "titulo": "Conversación con Salvadora Conesa",
+  "subtitulo": "Ayuno, yoga terapéutico, gong y el arte de aprender a meditar. Pulsa cualquier capítulo y el vídeo salta a ese momento.",
+  "entrevistador": "Santiago Ángel García",
+  "medio": "Madridmarket.es",
+  "invitada": "Salvadora Conesa",
+  "invitadaDetalle": "Yoga, ayuno y gong · Escuela de Yoga de Fuenlabrada",
+  "duracion": "18 min",
+  "duracionResumen": "4 min",
+  "videoCompleto": "entrevista_madridmarket_completa.mp4",
+  "videoResumen": "entrevista_madridmarket_resumen.mp4",
+  "poster": "entrevista_madridmarket_poster.jpg",
+  "capitulos": [
+   {
+    "t": 1,
+    "titulo": "Presentación de Salvadora Conesa",
+    "descripcion": "Santiago Ángel García recibe a una invitada que lleva cuarenta años dedicada al yoga: profesora, directora de su escuela, terapeuta Gestalt y coordinadora de grupos de ayuno."
+   },
+   {
+    "t": 36,
+    "titulo": "El ayuno y los encuentros de bienestar",
+    "descripcion": "Por qué descansar el aparato digestivo sienta tan bien, ayunos de cuatro días con líquidos y encuentros con amaneceres y paseos descalzos."
+   },
+   {
+    "t": 119,
+    "titulo": "Yoga terapéutico y la vibración del gong",
+    "descripcion": "Hatha yoga con enfoque terapéutico para la columna y las articulaciones, y el gong como maestro: nunca suena igual."
+   },
+   {
+    "t": 208,
+    "titulo": "¿Cómo se entra antes en meditación?",
+    "descripcion": "Sentarse con la espalda erguida y respirar hondo. Por qué tumbado no es meditar y cómo el gong acompaña a la mente."
+   },
+   {
+    "t": 333,
+    "titulo": "¿Solo o acompañado?",
+    "descripcion": "Meditar en grupo es como ir en pelotón. Una guía breve y después silencio: si alguien habla todo el rato, es visualización."
+   },
+   {
+    "t": 435,
+    "titulo": "Qué se siente al meditar: la mente en «síntesis»",
+    "descripcion": "Dejar la mente en blanco es dejarla en síntesis: sentir la respiración y el espacio entre un pensamiento y el siguiente."
+   },
+   {
+    "t": 597,
+    "titulo": "Visualización, meditación, el Dalai Lama y las ondas cerebrales",
+    "descripcion": "La diferencia entre llevar la mente en una dirección y simplemente parar. Lo que miden los encefalogramas en meditación profunda."
+   },
+   {
+    "t": 689,
+    "titulo": "Cuarenta años de práctica y el «estado de gracia»",
+    "descripcion": "Practica desde 1986. La paz siempre llega; el momento especial no, y ahí es donde el gong ayuda."
+   },
+   {
+    "t": 737,
+    "titulo": "La meditación y la vida en pareja",
+    "descripcion": "Meditar no rompe una pareja: te hace ver cosas que antes no veías, y eso nunca es un riesgo de la meditación."
+   },
+   {
+    "t": 824,
+    "titulo": "Los once minutos que cambian el día",
+    "descripcion": "Un día sí y otro no, de 10 a 15 minutos; lo ideal, once. Y la máxima de su maestro: si no tienes tiempo para once, medita veintidós."
+   },
+   {
+    "t": 859,
+    "titulo": "Tocar el gong como meditación",
+    "descripcion": "De pie y en movimiento, con dos o tres gongs a la vez. En el Bienestar Experience cerró el encuentro con tres gongs."
+   },
+   {
+    "t": 947,
+    "titulo": "Sesiones de gong, cuencos tibetanos y de cuarzo",
+    "descripcion": "Cada metal vibra distinto. Relajación con gong al final de cada mes y una sesión mensual de dos horas."
+   },
+   {
+    "t": 1027,
+    "titulo": "Una historia: el olfato que volvió",
+    "descripcion": "Un hombre que llevaba tres años sin olfato ni gusto tras el Covid salió de un baño de gong y esa noche, cenando, volvió a notar los sabores."
+   }
+  ],
+  "extra": {
+   "destacados": [
+    {
+     "icono": "🌅",
+     "titulo": "Ayuno y descanso digestivo",
+     "texto": "Cuantas más horas descansa el aparato digestivo, mejor. Propone un par de ayunos de cuatro días al año, solo con líquidos."
+    },
+    {
+     "icono": "🧘",
+     "titulo": "Yoga terapéutico",
+     "texto": "Una práctica pensada para cuidar la columna y las articulaciones, con asanas, respiración y meditación."
+    },
+    {
+     "icono": "🔔",
+     "titulo": "El gong, un maestro",
+     "texto": "Terapia de vibración que nunca suena igual: cambia con el día, la temperatura y las personas de la sala."
+    },
+    {
+     "icono": "🌿",
+     "titulo": "Meditar es entrenar",
+     "texto": "No se trata de dejar la mente en blanco, sino de parar, sentir la respiración y dar espacio entre pensamientos."
+    }
+   ],
+   "cita": {
+    "texto": "Te ocupas de las cosas, pero no te preocupas.",
+    "autor": "Salvadora Conesa, sobre lo que deja la meditación"
+   },
+   "pasos": {
+    "titulo": "Cómo empezar a meditar",
+    "items": [
+     {
+      "b": "Siéntate con la espalda erguida.",
+      "texto": "Una silla con respaldo es perfecta."
+     },
+     {
+      "b": "Respira hondo y para.",
+      "texto": "Relaja el sistema nervioso y atiende a la respiración."
+     },
+     {
+      "b": "Ponle un cronómetro.",
+      "texto": "Empieza con unos siete minutos, un día sí y otro no."
+     },
+     {
+      "b": "Acompañado es más fácil.",
+      "texto": "En grupo es como ir en pelotón."
+     },
+     {
+      "b": "Crece poco a poco.",
+      "texto": "Lo ideal, unos once minutos. Y si no tienes tiempo, medita veintidós."
+     }
+    ]
+   },
+   "historia": {
+    "titulo": "Una historia que no deja indiferente",
+    "h4": "Tres años sin olfato ni gusto",
+    "texto": "Un hombre que había perdido el olfato y el gusto tras el Covid asistió a un baño de gong con su mujer. Esa misma noche, cenando, volvió a distinguir los sabores. Para Salvadora, la vibración del gong se dirige a las zonas bloqueadas del cuerpo y ayuda a liberarlas.",
+    "t": 1027,
+    "boton": "▶ Verlo en la entrevista"
+   },
+   "aviso": "Las experiencias y opiniones recogidas en la entrevista son personales y no sustituyen el consejo de un profesional sanitario."
+  }
+ },
+ "galeria": []
 }

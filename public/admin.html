@@ -346,16 +346,22 @@ header.bar h1{font-size:1.5rem;flex:1}
       +'<div class="row">'+fld('Descripción (admite <b>negrita</b>)',p+'descripcion',{area:true,rows:4})+'</div>'
       +'<div class="row c2"><div><label>Otros detalles (uno por línea)</label><textarea data-kind="detotros" data-i="'+i+'" rows="4">'+esc(detOtros(e).join('\n'))+'</textarea><p class="hint">Horario, lugar y precio van en sus casillas de arriba. Aquí solo lo demás (🎟 entradas, 🚇 metro…).</p></div>'+fld('Nota al pie cuando ya ha pasado (opcional)',p+'notaPasado',{area:true,rows:4})+'</div>'
       +'<label>Otros botones (WhatsApp, enlaces…)</label>'+(e.botones||[]).map(function(b,j){return b.slot?'':btHtml(i,j,b)}).join('')
-      +'<button class="btn s" type="button" data-act="addBt" data-i="'+i+'">+ Añadir botón</button></div>';
+      +'<button class="btn s" type="button" data-act="addBt" data-i="'+i+'">+ Añadir botón</button>'
+      +'<label style="margin-top:14px">🖼 Galería de este evento ('+(e.galeria||[]).length+')</label><p class="hint">Vídeos e imágenes que solo pertenecen a este evento. En la web sale un botón «🖼 Galería» en la tarjeta que despliega las miniaturas.</p>'
+      +(e.galeria||[]).map(function(g,k){return galHtml(g,k,i)}).join('')
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" type="button" data-act="addGal" data-ev="'+i+'" data-t="video">+ Añadir vídeo</button><button class="btn s" type="button" data-act="addGal" data-ev="'+i+'" data-t="imagen">+ Añadir imagen</button></div></div>';
   }
-  function galHtml(g,i){
-    var p='galeria.'+i+'.',v=g.tipo!=='imagen';
+  function galList(b){var e=b.dataset.ev;if(e!==undefined&&e!==''){var E=DOC.eventos[+e];E.galeria=E.galeria||[];return E.galeria}DOC.galeria=DOC.galeria||[];return DOC.galeria}
+  function galHtml(g,i,ev){
+    var inEv=(typeof ev==='number'),p=(inEv?'eventos.'+ev+'.':'')+'galeria.'+i+'.',v=g.tipo!=='imagen',dE=inEv?' data-ev="'+ev+'"':'';
+    var mover='';
+    if(!inEv&&(DOC.eventos||[]).length)mover='<div style="grid-column:1/-1"><select><option value="">Pasar a un evento…</option>'+DOC.eventos.map(function(e,k){return '<option value="'+k+'">'+esc((e.inicio||'').slice(8,10)+'/'+(e.inicio||'').slice(5,7)+' · '+(e.titulo||'(sin título)'))+'</option>'}).join('')+'</select> <button class="btn s" type="button" data-act="galMove" data-i="'+i+'">Pasar</button></div>';
     return '<div class="bt" style="grid-template-columns:90px 1fr 1.6fr auto"><div><label>Tipo</label><b style="display:block;padding:8px 0">'+(v?'▶ Vídeo':'🖼 Imagen')+'</b></div>'
       +'<div><label>Título (se ve en la miniatura)</label><input data-p="'+p+'titulo" value="'+esc(g.titulo)+'"></div>'
       +'<div><label>'+(v?'Vídeo':'Imagen')+'</label><input data-p="'+p+'url" value="'+esc(g.url)+'" placeholder="'+(v?'https://www.youtube.com/watch?v=…  ·  URL de otra web  ·  o sube un archivo':'/m/'+DOC.anio+'-'+pad(DOC.mes)+'/flyers/archivo')+'">'
       +'<div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'url" data-tipo="'+(v?'videos':'flyers')+'">Subir '+(v?'vídeo':'imagen')+'…</button></div><div class="bar-up" hidden><i></i></div>'
       +(v?'<input data-p="'+p+'poster" value="'+esc(g.poster)+'" placeholder="Portada del vídeo (opcional)" style="margin-top:6px"><div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'poster" data-tipo="videos">Subir portada…</button></div><div class="bar-up" hidden><i></i></div>':'')+'</div>'
-      +'<div style="display:flex;gap:4px"><button class="btn s" type="button" data-act="galUp" data-i="'+i+'">↑</button><button class="btn s" type="button" data-act="galDown" data-i="'+i+'">↓</button><button class="btn s d" type="button" data-act="galDel" data-i="'+i+'">✕</button></div></div>';
+      +'<div style="display:flex;gap:4px"><button class="btn s" type="button" data-act="galUp" data-i="'+i+'"'+dE+'>↑</button><button class="btn s" type="button" data-act="galDown" data-i="'+i+'"'+dE+'>↓</button><button class="btn s d" type="button" data-act="galDel" data-i="'+i+'"'+dE+'>✕</button></div>'+mover+'</div>';
   }
   function btHtml(i,j,b){
     var p='eventos.'+i+'.botones.'+j+'.';
@@ -414,10 +420,15 @@ header.bar h1{font-size:1.5rem;flex:1}
       var ult=ev[ev.length-1],base=ult?ult.inicio.slice(0,10):DOC.anio+'-'+pad(DOC.mes)+'-01';
       ev.push({orden:ev.length,inicio:base+'T18:00',fin:base+'T20:00',etiqueta:'',titulo:'Nuevo evento',descripcion:'',detalles:[],botones:[],notaPasado:''});marcarSucio();pintar();
     }
-    else if(act==='addGal'){DOC.galeria=DOC.galeria||[];DOC.galeria.push({tipo:b.dataset.t==='imagen'?'imagen':'video',titulo:'',url:''});marcarSucio();pintar()}
-    else if(act==='galDel'){if(confirm('¿Quitar este elemento de la galería? (el archivo no se borra del servidor)')){DOC.galeria.splice(i,1);marcarSucio();pintar()}}
-    else if(act==='galUp'&&i>0){var g1=DOC.galeria;var t3=g1[i];g1[i]=g1[i-1];g1[i-1]=t3;marcarSucio();pintar()}
-    else if(act==='galDown'&&i<(DOC.galeria||[]).length-1){var g2=DOC.galeria;var t4=g2[i];g2[i]=g2[i+1];g2[i+1]=t4;marcarSucio();pintar()}
+    else if(act==='addGal'){var L0=galList(b);L0.push({tipo:b.dataset.t==='imagen'?'imagen':'video',titulo:'',url:''});marcarSucio();pintar()}
+    else if(act==='galDel'){if(confirm('¿Quitar este elemento de la galería? (el archivo no se borra del servidor)')){galList(b).splice(i,1);marcarSucio();pintar()}}
+    else if(act==='galUp'&&i>0){var g1=galList(b);var t3=g1[i];g1[i]=g1[i-1];g1[i-1]=t3;marcarSucio();pintar()}
+    else if(act==='galDown'&&i<galList(b).length-1){var g2=galList(b);var t4=g2[i];g2[i]=g2[i+1];g2[i+1]=t4;marcarSucio();pintar()}
+    else if(act==='galMove'){
+      var sel=b.parentNode.querySelector('select'),dst=sel?sel.value:'';
+      if(dst===''){toast('Elige primero a qué evento lo quieres pasar',true);return}
+      var it=galList(b).splice(i,1)[0];var E=DOC.eventos[+dst];E.galeria=E.galeria||[];E.galeria.push(it);marcarSucio();pintar();toast('Pasado a la galería del evento. Pulsa Guardar.');
+    }
     else if(act==='horaDesde'){
       var e3=ev[i],hh=function(x){return (x||'').slice(11,16)};
       if(!e3.inicio){toast('Primero pon la fecha de Inicio',true);return}

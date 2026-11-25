@@ -72,6 +72,7 @@ ALTER TABLE ${S}.mes ADD COLUMN IF NOT EXISTS galeria jsonb;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS sin_fecha boolean NOT NULL DEFAULT false;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS texto_fecha text;
 ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS crm_id text;
+ALTER TABLE ${S}.evento ADD COLUMN IF NOT EXISTS galeria jsonb;
 CREATE INDEX IF NOT EXISTS evento_mes_idx ON ${S}.evento(mes_id);
 CREATE INDEX IF NOT EXISTS capitulo_ent_idx ON ${S}.capitulo(entrevista_id);
 `;
@@ -159,6 +160,7 @@ function normalizarMes(doc) {
       descripcion: html(e.descripcion, 6000),
       detalles: (Array.isArray(e.detalles) ? e.detalles : []).map((d) => html(d, 600)).filter(Boolean).slice(0, 12),
       botones: (Array.isArray(e.botones) ? e.botones : []).map(normalizarBoton).filter(Boolean).slice(0, 12),
+      galeria: normalizarGaleria(e.galeria),
       notaPasado: str(e.notaPasado, 600),
     });
   });
@@ -245,7 +247,7 @@ function create(pool) {
     if (!m || (!m.publicado && !admin)) return null;
     const evs = (await pool.query(
       `SELECT orden, to_char(fecha_inicio,'YYYY-MM-DD"T"HH24:MI') AS inicio, to_char(fecha_fin,'YYYY-MM-DD"T"HH24:MI') AS fin,
-              etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id
+              etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id, galeria
          FROM ${S}.evento WHERE mes_id = $1 ORDER BY sin_fecha, fecha_inicio, orden, id`, [m.id])).rows;
     const en = (await pool.query(`SELECT * FROM ${S}.entrevista WHERE mes_id = $1`, [m.id])).rows[0];
     let entrevista = null;
@@ -264,7 +266,7 @@ function create(pool) {
       eventos: evs.map((e) => ({
         orden: e.orden, inicio: e.inicio, fin: e.fin, etiqueta: e.etiqueta, titulo: e.titulo, descripcion: e.descripcion,
         detalles: e.detalles, botones: e.botones, notaPasado: e.nota_pasado,
-        sinFecha: e.sin_fecha, textoFecha: e.texto_fecha, crmId: e.crm_id,
+        sinFecha: e.sin_fecha, textoFecha: e.texto_fecha, crmId: e.crm_id, galeria: e.galeria || [],
       })),
       entrevista,
     };
@@ -288,10 +290,10 @@ function create(pool) {
       await c.query(`DELETE FROM ${S}.entrevista WHERE mes_id = $1`, [m.id]);
       for (const e of d.eventos) {
         await c.query(
-          `INSERT INTO ${S}.evento (mes_id, orden, fecha_inicio, fecha_fin, etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+          `INSERT INTO ${S}.evento (mes_id, orden, fecha_inicio, fecha_fin, etiqueta, titulo, descripcion, detalles, botones, nota_pasado, sin_fecha, texto_fecha, crm_id, galeria)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
           [m.id, e.orden, e.inicio.replace('T', ' '), e.fin.replace('T', ' '), e.etiqueta, e.titulo, e.descripcion,
-            JSON.stringify(e.detalles), JSON.stringify(e.botones), e.notaPasado, e.sinFecha, e.textoFecha, e.crmId]);
+            JSON.stringify(e.detalles), JSON.stringify(e.botones), e.notaPasado, e.sinFecha, e.textoFecha, e.crmId, JSON.stringify(e.galeria || [])]);
       }
       if (d.entrevista) {
         const n = d.entrevista;

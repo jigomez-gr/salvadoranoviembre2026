@@ -47,3 +47,10 @@ Los **datos de cada mes** (textos, fechas, flyers, vídeos) se cambian en `/admi
 - Entrar en `/admin` → Diciembre 2026: rellenar **Aviso destacado** y marcar **Publicado** (el lunes 1 pasa a ser el mes actual). Cuando haya fechas: **+ Añadir evento** o **Traer del CRM**.
 - Cada mes: **+ Nuevo mes** → copiar clases habituales → rellenar → Guardar. El mes anterior pasa solo al histórico.
 - Tras 1/12 el título de la URL (`salvadoranov2026`) queda anticuado: si quieres un dominio neutro (p. ej. `actividades.…`), añadirlo en Dokploy → Domains y cambiar la variable de la landing.
+
+
+## 25/11 (noche) · Galería por evento
+- Cada evento tiene su propia `galeria` (columna `evento.galeria jsonb`, se crea sola al desplegar). En la tarjeta sale el botón «🖼 Galería (n)» que despliega miniaturas; al pulsar una se abre ampliada; «✕ Cerrar» la pliega.
+- /admin → evento → «Galería de este evento». Los elementos de la galería del mes tienen «Pasar a un evento…».
+- Galería del mes (YouTube de prueba) ya escrita en BD con `alta-galeria-noviembre.bat`; falta pasarla al evento del baño de gong desde /admin.
+- Pendiente: `subir.bat` + Deploy en Dokploy.

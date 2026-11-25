@@ -13,3 +13,4 @@ media-nuevos/
 node_modules/
 .env
 *.log
+alta-galeria.log
