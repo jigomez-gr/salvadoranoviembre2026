@@ -355,13 +355,14 @@ header.bar h1{font-size:1.5rem;flex:1}
   function galHtml(g,i,ev){
     var inEv=(typeof ev==='number'),p=(inEv?'eventos.'+ev+'.':'')+'galeria.'+i+'.',v=g.tipo!=='imagen',dE=inEv?' data-ev="'+ev+'"':'';
     var mover='';
+    var modo=inEv?'<div style="grid-column:1/-1"><label>¿Dónde se ve?</label><select data-p="'+p+'mostrar">'+[['','Solo en la galería de este evento'],['ambas','En este evento y también en la galería del mes'],['mes','Solo en la galería del mes (no en el evento)']].map(function(o){return '<option value="'+o[0]+'"'+((g.mostrar||'')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></div>':'';
     if(!inEv&&(DOC.eventos||[]).length)mover='<div style="grid-column:1/-1"><select><option value="">Pasar a un evento…</option>'+DOC.eventos.map(function(e,k){return '<option value="'+k+'">'+esc((e.inicio||'').slice(8,10)+'/'+(e.inicio||'').slice(5,7)+' · '+(e.titulo||'(sin título)'))+'</option>'}).join('')+'</select> <button class="btn s" type="button" data-act="galMove" data-i="'+i+'">Pasar</button></div>';
     return '<div class="bt" style="grid-template-columns:90px 1fr 1.6fr auto"><div><label>Tipo</label><b style="display:block;padding:8px 0">'+(v?'▶ Vídeo':'🖼 Imagen')+'</b></div>'
       +'<div><label>Título (se ve en la miniatura)</label><input data-p="'+p+'titulo" value="'+esc(g.titulo)+'"></div>'
       +'<div><label>'+(v?'Vídeo':'Imagen')+'</label><input data-p="'+p+'url" value="'+esc(g.url)+'" placeholder="'+(v?'https://www.youtube.com/watch?v=…  ·  URL de otra web  ·  o sube un archivo':'/m/'+DOC.anio+'-'+pad(DOC.mes)+'/flyers/archivo')+'">'
       +'<div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'url" data-tipo="'+(v?'videos':'flyers')+'">Subir '+(v?'vídeo':'imagen')+'…</button></div><div class="bar-up" hidden><i></i></div>'
       +(v?'<input data-p="'+p+'poster" value="'+esc(g.poster)+'" placeholder="Portada del vídeo (opcional)" style="margin-top:6px"><div style="margin-top:4px"><button type="button" class="btn s" data-act="subir" data-mes="1" data-p="'+p+'poster" data-tipo="videos">Subir portada…</button></div><div class="bar-up" hidden><i></i></div>':'')+'</div>'
-      +'<div style="display:flex;gap:4px"><button class="btn s" type="button" data-act="galUp" data-i="'+i+'"'+dE+'>↑</button><button class="btn s" type="button" data-act="galDown" data-i="'+i+'"'+dE+'>↓</button><button class="btn s d" type="button" data-act="galDel" data-i="'+i+'"'+dE+'>✕</button></div>'+mover+'</div>';
+      +'<div style="display:flex;gap:4px"><button class="btn s" type="button" data-act="galUp" data-i="'+i+'"'+dE+'>↑</button><button class="btn s" type="button" data-act="galDown" data-i="'+i+'"'+dE+'>↓</button><button class="btn s d" type="button" data-act="galDel" data-i="'+i+'"'+dE+'>✕</button></div>'+mover+modo+'</div>';
   }
   function btHtml(i,j,b){
     var p='eventos.'+i+'.botones.'+j+'.';

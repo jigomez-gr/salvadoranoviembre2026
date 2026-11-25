@@ -115,6 +115,7 @@ function normalizarGaleria(g) {
     if (!x || typeof x !== 'object' || !urlOk(x.url)) return null;
     const o = { tipo: x.tipo === 'imagen' ? 'imagen' : 'video', titulo: str(x.titulo, 200), url: x.url.trim().slice(0, 1000) };
     if (o.tipo === 'video' && x.poster && urlOk(x.poster)) o.poster = x.poster.trim().slice(0, 1000);
+    if (x.mostrar === 'ambas' || x.mostrar === 'mes') o.mostrar = x.mostrar; // por defecto: solo en su evento
     return o;
   }).filter(Boolean);
 }
